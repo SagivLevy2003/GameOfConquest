@@ -3,31 +3,38 @@ using UnityEngine;
 
 public class AttackUnitCommand : ICommand
 {
-    Unit attacker;
-    Unit targetUnit;
+    Army _attacker;
+    Unit _targetUnit;
 
     string ICommand.Name => "Attack Unit";
 
     public event Action OnExecutionFinished;
-
+      
     public AttackUnitCommand(GameObject subject, GameObject target)
     {
-        if (subject) attacker = subject.GetComponent<Unit>();
-        if (target) targetUnit = target.GetComponent<Unit>();
+        if (subject) _attacker = subject.GetComponent<Army>();
+        if (target) _targetUnit = target.GetComponent<Unit>();
     }
 
     public void Execute()
     {
-        attacker.MovementHandler.MoveToEntity(targetUnit.gameObject);
+        _attacker.MovementHandler.MoveToEntity(_targetUnit.gameObject);
+
+        _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
+        _attacker.MovementHandler.OnTargetReached.AddListener(InitiateAttack);
+    }
+
+    public void InitiateAttack()
+    {
+        _attacker.AttackHandler.TryAttackTarget(_targetUnit);
+        Debug.Log("attack");
     }
 
     public bool IsValidForInput()
     {
-        if (attacker == null || targetUnit == null) return false; //Returns false if subject/target unit script is null
+        if (_attacker == null || _targetUnit == null) return false; //Returns false if subject/target unit script is null
 
-        if (attacker.Type != EntityType.Unit && targetUnit.Type != EntityType.Unit) return false; //Returns false if the attacker or target aren't units
-
-        if (attacker.Owner.Id == targetUnit.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
+        if (_attacker.Owner.Id == _targetUnit.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
     }

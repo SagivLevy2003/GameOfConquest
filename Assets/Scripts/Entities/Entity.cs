@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class Entity : MonoBehaviour, ITargetable, ISelectable
-{
-    [HideInInspector] public virtual EntityType Type => EntityType.Unit;
-    
+{    
     [field: SerializeField] public Player Owner { get; private set; }
+    [SerializeField] protected float _currentManpower = 10;
 
     public UnityEvent OnEntitySelect = new();
     public UnityEvent OnEntityDeselect = new();
@@ -25,10 +24,4 @@ public class Entity : MonoBehaviour, ITargetable, ISelectable
     {
         OnEntitySelect?.Invoke();
     }
-}
-
-public enum EntityType
-{
-    Structure,
-    Unit
 }

@@ -20,6 +20,7 @@ public class CommandResolver : Singleton<CommandResolver>
             }
         }
 
+        if (_logInteractions) Debug.Log($"No appropriate command was found. [Subject: <color=cyan>{subject}</color> | Target: <color=cyan>{target}</color>]");
         return null;
     }
 }

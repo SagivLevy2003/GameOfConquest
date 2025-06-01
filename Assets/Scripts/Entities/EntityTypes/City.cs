@@ -6,12 +6,9 @@ using UnityEngine;
 public class City : Structure
 {
     [Header("Production")]
-    [SerializeField] float _currentManpower = 10;
     [SerializeField] float _manpowerGenerationPerTick = 1;
     [SerializeField] float _productionTickRate = 1;
     [SerializeField] UnitTrainingManager _trainingManager;
-
-    public string test => throw new System.NotImplementedException();
 
     private void Start()
     {

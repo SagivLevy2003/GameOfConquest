@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Unit : Entity
 {
-    public override EntityType Type => EntityType.Unit;
     public EntityMovementHandler MovementHandler { get; private set; }
 
     private void Awake()

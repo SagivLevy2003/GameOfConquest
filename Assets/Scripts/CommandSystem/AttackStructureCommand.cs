@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class AttackStructureCommand : ICommand
 {
-    Unit attacker;
-    Structure targetStructure;
+    Army _attacker;
+    Structure _targetStructure;
 
     string ICommand.Name => "Attack Structure";
 
@@ -12,22 +12,29 @@ public class AttackStructureCommand : ICommand
 
     public AttackStructureCommand(GameObject subject, GameObject target)
     {
-        if (subject) attacker = subject.GetComponentInChildren<Unit>();
-        if (target) targetStructure = target.GetComponentInChildren<Structure>();
+        if (subject) _attacker = subject.GetComponentInChildren<Army>();
+        if (target) _targetStructure = target.GetComponentInChildren<Structure>();
     }
 
     public void Execute()
     {
-        attacker.MovementHandler.MoveToPosition(targetStructure.transform.position);
+        _attacker.MovementHandler.MoveToEntity(_targetStructure.gameObject);
+
+        _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
+        _attacker.MovementHandler.OnTargetReached.AddListener(InitiateAttack);
+    }
+
+    public void InitiateAttack()
+    {
+        _attacker.AttackHandler.TryAttackTarget(_targetStructure);
+        Debug.Log("attack");
     }
 
     public bool IsValidForInput()
     {
-        if (attacker == null || targetStructure == null) return false; //Return false if entity scripts are missing
+        if (_attacker == null || _targetStructure == null) return false; //Return false if entity scripts are missing
 
-        if (attacker.Type != EntityType.Unit && targetStructure.Type != EntityType.Structure) return false; //Returns false if the attacker isn't a unit or target isn't a structure
-
-        if (attacker.Owner.Id == targetStructure.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
+        if (_attacker.Owner.Id == _targetStructure.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
     }

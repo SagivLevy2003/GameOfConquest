@@ -42,6 +42,7 @@ public class CommandQueue : MonoBehaviour
         Queue.Add(command); //Adds the command to the queue
         _debugQueueDisplay.Add(command.Name); //Adds the command to the debug display
 
+        command.OnExecutionFinished -= ExecuteNextCommand; //Subscribe to the command finish event
         command.OnExecutionFinished += ExecuteNextCommand; //Subscribe to the command finish event
 
         if (Queue.Count == 1) Queue[0].Execute(); //If the queue is empty and this is the only command, execute it immidiately

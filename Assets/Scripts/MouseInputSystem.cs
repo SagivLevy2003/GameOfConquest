@@ -6,7 +6,7 @@ public class MouseInputSystem : Singleton<MouseInputSystem>
     public void OnSelect(InputAction.CallbackContext context) //Select Action Callback
     {
         if (!context.performed) return; //Ensures the code is only called once per interaction
-        SelectionSystem.Instance.TrySelectHoveredObject();
+        StartCoroutine(SelectionSystem.Instance.TrySelectHoveredObjectCoroutine());
     }
 
     public void OnTarget(InputAction.CallbackContext context) //Target Action Callback
