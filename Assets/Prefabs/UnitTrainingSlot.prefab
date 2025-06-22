@@ -224,12 +224,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4048732063382582631}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e683129bb28ece24d8f52aa96d4fcd21, type: 3}
+  m_Script: {fileID: 11500000, guid: f4b3a8630a49c0c458096e9532c2f8e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 0}
   _nameDisplay: {fileID: 4347623389104914746}
   _minimumCostDisplay: {fileID: 5430537523188593794}
+  <Button>k__BackingField: {fileID: 1596613497172899378}
 --- !u!114 &1596613497172899378
 MonoBehaviour:
   m_ObjectHideFlags: 0

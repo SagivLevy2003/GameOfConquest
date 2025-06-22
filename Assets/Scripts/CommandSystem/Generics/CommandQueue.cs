@@ -42,28 +42,42 @@ public class CommandQueue : MonoBehaviour
         Queue.Add(command); //Adds the command to the queue
         _debugQueueDisplay.Add(command.Name); //Adds the command to the debug display
 
-        command.OnExecutionFinished -= ExecuteNextCommand; //Subscribe to the command finish event
-        command.OnExecutionFinished += ExecuteNextCommand; //Subscribe to the command finish event
-
-        if (Queue.Count == 1) Queue[0].Execute(); //If the queue is empty and this is the only command, execute it immidiately
+        if (Queue.Count == 1) ExecuteCommand(command); //If the queue is empty and this is the only command, execute it immidiately
     }
 
-    private void ExecuteNextCommand()
+    private void HandleCommandCompletion() //Exists the current command and executes the next one
     {
         if (_logInteractions) Debug.Log($"Command queue updated of finished command execution: <color=cyan>{Queue[0]}</color>");
 
-        Queue[0].OnExecutionFinished -= ExecuteNextCommand; //Unsubscribe from the event if for some reason the memory isn't cleared
+        if (Queue.Count <= 0)//Returns if the queue is, for some reason, empty
+        {
+            Debug.LogWarning($"ExecuteNextCommand was called on an empty CommandQueue on <color=cyan>{gameObject}</color>!");
+            return;
+        }
+
         Queue.RemoveAt(0); //Remove the command that just finished from the queue
-        _debugQueueDisplay.RemoveAt(0); 
-        if (Queue.Count > 0) Queue[0].Execute(); //Execute the next command, if any
+        _debugQueueDisplay.RemoveAt(0); //Updates the debug display
+
+        if (Queue.Count > 0) ExecuteCommand(Queue[0]); //Execute the next command, if any
+    }
+
+    private void ExecuteCommand(ICommand command) //Executes a given command
+    {
+        command.OnExecutionFinished -= HandleCommandCompletion; // prevent double-subscribe
+        command.OnExecutionFinished += HandleCommandCompletion;
+        command.Execute();
     }
 
     public void Clear()
     {
         if (_logInteractions) Debug.Log($"Cleared command queue for <color=cyan>{AttachedEntity.gameObject}</color>");
+        
+        foreach (ICommand command in Queue) //Executes the exit logic on 
+        {
+            command.CommandExecutionFinished(true);
+        }
 
         Queue.Clear();
         _debugQueueDisplay.Clear(); 
-
     }
 }

@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94c2abe7012290847b33fc0b532c8e0e, type: 3}
+  m_Script: {fileID: 11500000, guid: 22d056c84d564504899983e8b9dbf389, type: 3}
   m_Name: Army
   m_EditorClassIdentifier: 
-  <MinManpowerCost>k__BackingField: 10
-  <MaxManpowerCost>k__BackingField: 300
+  <MinManpowerCost>k__BackingField: 0
+  <MaxManpowerCost>k__BackingField: 10
+  <UnitName>k__BackingField: sex offenders
   <Prefab>k__BackingField: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}

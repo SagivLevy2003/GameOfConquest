@@ -1,19 +1,19 @@
-﻿using System.Buffers;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class Entity : MonoBehaviour, ITargetable, ISelectable
 {    
     [field: SerializeField] public Player Owner { get; private set; }
-    [SerializeField] protected float _currentManpower = 10;
+    [field: SerializeField] public int Manpower { get; private set; } = 10;
+    [field: SerializeField] public CombatHandler CombatHandler { get; private set; }
+
 
     public UnityEvent OnEntitySelect = new();
     public UnityEvent OnEntityDeselect = new();
+    public UnityEvent<Entity> OnManpowerDepletion = new();
 
-    private void Awake()
-    {
-
-    }
+    [SerializeField] private bool _logActions;
 
     public void OnDeselect()
     {
@@ -23,5 +23,36 @@ public class Entity : MonoBehaviour, ITargetable, ISelectable
     public void OnSelect()
     {
         OnEntitySelect?.Invoke();
+    }
+
+    public void SetOwner(Player newOwner)
+    {
+        if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> has switched owners from <color=cyan>{Owner}</color> to: <color=cyan>{newOwner}</color>.");
+
+        Owner = newOwner;
+    }
+
+    public int RemoveManpower(int mp, Entity source = null) //Directly reduces manpower, skipping combat calculations
+    {
+        Manpower -= mp;
+
+        if (Manpower <= 0)
+        {
+            OnManpowerDepleted(source);
+        }
+        
+        return Manpower;
+    }
+
+    protected virtual void OnManpowerDepleted(Entity source = null) //Handles manpower delpetion (death) scenario. specific behaviour is implemented by inherited classes.
+    {
+        Manpower = 0;
+        OnManpowerDepletion?.Invoke(source);
+    }
+
+    public int AddManpower(int mp)
+    {
+        Manpower += mp;
+        return Manpower;
     }
 }

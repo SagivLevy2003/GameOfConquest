@@ -24,6 +24,8 @@ public class UI_UnitTrainingBarManager : MonoBehaviour
         
         if (!trainingManager) return; //Returns if the selected object is not capable of training units
 
+        //if (trainingManager.OwnerEntity.Owner)
+
         GenerateMenu(trainingManager);
     }
 
@@ -31,10 +33,13 @@ public class UI_UnitTrainingBarManager : MonoBehaviour
     {
         foreach (var trainableUnit in trainingManager.TrainableUnits)
         {
-            GameObject slot = Instantiate(_prefab, _uiContainer.transform);
-            slot.GetComponent<UI_UnitTrainingSlot>().InitializeSlot(trainableUnit);
+            GameObject slotObject = Instantiate(_prefab, _uiContainer.transform);
+            UI_UnitTrainingSlot slot = slotObject.GetComponent<UI_UnitTrainingSlot>();
+            slot.InitializeSlot(trainableUnit);
 
-            _slotList.Add(slot);
+            slot.Button.onClick.AddListener(() => trainingManager.TrainUnit(slot.UnitTrainingData));
+
+            _slotList.Add(slotObject);
         }
 
         _uiContainer.SetActive(true);

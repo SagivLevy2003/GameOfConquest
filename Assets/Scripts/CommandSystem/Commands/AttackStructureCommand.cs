@@ -1,14 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
-public class AttackStructureCommand : ICommand
+public class AttackStructureCommand : BaseCommand
 {
-    Army _attacker;
-    Structure _targetStructure;
+    readonly Army _attacker;
+    readonly Structure _targetStructure;
+    CombatInstance _combatInstance;
 
-    string ICommand.Name => "Attack Structure";
-
-    public event Action OnExecutionFinished;
+    public override string Name => "Attack Structure";
 
     public AttackStructureCommand(GameObject subject, GameObject target)
     {
@@ -16,26 +15,31 @@ public class AttackStructureCommand : ICommand
         if (target) _targetStructure = target.GetComponentInChildren<Structure>();
     }
 
-    public void Execute()
+    public override void Execute()
     {
         _attacker.MovementHandler.MoveToEntity(_targetStructure.gameObject);
-
-        _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
         _attacker.MovementHandler.OnTargetReached.AddListener(InitiateAttack);
     }
 
     public void InitiateAttack()
     {
-        _attacker.AttackHandler.TryAttackTarget(_targetStructure);
-        Debug.Log("attack");
+        _combatInstance = CombatManager.Instance.InitiateCombat(_attacker, _targetStructure);
+        Debug.Log($"attacking, {Id}");
     }
 
-    public bool IsValidForInput()
+    public override bool IsValidForInput()
     {
         if (_attacker == null || _targetStructure == null) return false; //Return false if entity scripts are missing
 
         if (_attacker.Owner.Id == _targetStructure.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
+    }
+
+    public override void CommandExecutionFinished(bool isForcedExit)
+    {
+        base.CommandExecutionFinished(isForcedExit);
+        if (_attacker != null) _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
+        _combatInstance?.EndCombatInstance();
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class City : Structure
 {
     [Header("Production")]
-    [SerializeField] float _manpowerGenerationPerTick = 1;
+    [SerializeField] int _manpowerGenerationPerTick = 1;
     [SerializeField] float _productionTickRate = 1;
     [SerializeField] UnitTrainingManager _trainingManager;
 
@@ -18,8 +18,9 @@ public class City : Structure
 
     private IEnumerator GenerateManpower()
     {
-        yield return new WaitForSeconds(_productionTickRate); 
-        _currentManpower += _manpowerGenerationPerTick;
+        yield return new WaitForSeconds(_productionTickRate);
+        AddManpower(_manpowerGenerationPerTick);
+
         StartCoroutine(GenerateManpower());
     }
 }

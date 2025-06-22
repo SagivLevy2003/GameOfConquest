@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 4774348259402072163}
   - component: {fileID: 6549641046943586209}
   - component: {fileID: 7263413994477857065}
-  - component: {fileID: 617945378632397408}
   - component: {fileID: 4436205718898068066}
   - component: {fileID: 8856704988339786252}
   - component: {fileID: -2481090355514796033}
+  - component: {fileID: 6757046553296218725}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -34,7 +34,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.5657, y: 1.5657, z: 1.5657}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4537744309132883060}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6549641046943586209
@@ -138,26 +139,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &617945378632397408
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743780730333280238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4592f8e0c5abd14d9606d8bdbc77a5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Owner>k__BackingField:
-    Id: 1
-  OnEntitySelect:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEntityDeselect:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4436205718898068066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,11 +178,90 @@ MonoBehaviour:
   m_GameObject: {fileID: 743780730333280238}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9712855b278e84f857aa3e9de7fcd2, type: 3}
+  m_Script: {fileID: 11500000, guid: c42b3180853da244da26a1f118a07823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Owner>k__BackingField:
+    Id: 0
+  <Manpower>k__BackingField: 10
+  <CombatHandler>k__BackingField: {fileID: 1016500625315971707}
+  OnEntitySelect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEntityDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManpowerDepletion:
+    m_PersistentCalls:
+      m_Calls: []
+  _logActions: 0
+  _manpowerGenerationPerTick: 1
+  _productionTickRate: 1
+  _trainingManager: {fileID: 0}
+--- !u!114 &6757046553296218725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743780730333280238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3b261e825b560148ab84713bf314963, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <TrainableUnits>k__BackingField:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 95e6a3b97e0875245882418e21af2b71, type: 2}
   OnUnitTrained:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &7443471758525172994
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4537744309132883060}
+  - component: {fileID: 1016500625315971707}
+  m_Layer: 0
+  m_Name: CombatHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4537744309132883060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443471758525172994}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4774348259402072163}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1016500625315971707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443471758525172994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98aaf91d8ae1bb84f909010d9c60ad82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <OwnerEntity>k__BackingField: {fileID: 0}
+  <AttackPower>k__BackingField:
+    _baseValue: 1
+  <AttackType>k__BackingField: 5
+  ResistanceModifiers: []
+  InCombat: 0

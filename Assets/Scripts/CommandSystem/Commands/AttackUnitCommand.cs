@@ -1,41 +1,47 @@
 ﻿using System;
 using UnityEngine;
 
-public class AttackUnitCommand : ICommand
+public class AttackUnitCommand : BaseCommand
 {
-    Army _attacker;
-    Unit _targetUnit;
+    readonly Army _attacker;
+    readonly Unit _targetUnit;
+    CombatInstance _combatInstance;
 
-    string ICommand.Name => "Attack Unit";
+    public override string Name => "Attack Unit";
 
-    public event Action OnExecutionFinished;
-      
     public AttackUnitCommand(GameObject subject, GameObject target)
     {
         if (subject) _attacker = subject.GetComponent<Army>();
         if (target) _targetUnit = target.GetComponent<Unit>();
     }
 
-    public void Execute()
+    public override void Execute()
     {
+        Debug.Log($"executing command with id {Id}");
         _attacker.MovementHandler.MoveToEntity(_targetUnit.gameObject);
 
-        _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
         _attacker.MovementHandler.OnTargetReached.AddListener(InitiateAttack);
     }
 
     public void InitiateAttack()
     {
-        _attacker.AttackHandler.TryAttackTarget(_targetUnit);
-        Debug.Log("attack");
+        _combatInstance = CombatManager.Instance.InitiateCombat(_attacker, _targetUnit);
+        Debug.Log($"attacking, {Id}");
     }
 
-    public bool IsValidForInput()
+    public override bool IsValidForInput()
     {
         if (_attacker == null || _targetUnit == null) return false; //Returns false if subject/target unit script is null
 
         if (_attacker.Owner.Id == _targetUnit.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
+    }
+
+    public override void CommandExecutionFinished(bool isForcedExit)
+    {
+        base.CommandExecutionFinished(isForcedExit);
+        _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
+        _combatInstance?.EndCombatInstance();
     }
 }

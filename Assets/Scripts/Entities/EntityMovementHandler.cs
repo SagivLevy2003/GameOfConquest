@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
+
 
 public class EntityMovementHandler : MonoBehaviour
 {
@@ -10,6 +9,8 @@ public class EntityMovementHandler : MonoBehaviour
     [SerializeField] private NavMeshAgent _navAgent;
 
     [SerializeField] private Transform _movementTarget = null;
+    private float _targetRadius;
+    private float _selfRadius;
 
     public UnityEvent OnTargetReached = new();
 
@@ -35,6 +36,8 @@ public class EntityMovementHandler : MonoBehaviour
             enabled = false;
         }
 
+        _selfRadius = CalculateRadius(gameObject);
+
         //NavMeshAgent setup
         _navAgent.updateRotation = false;
         _navAgent.updateUpAxis = false;
@@ -46,7 +49,7 @@ public class EntityMovementHandler : MonoBehaviour
     {
         if (_movementTarget)
         {
-            _navAgent.destination = _movementTarget.position;
+            _navAgent.destination = GetDestinationFromTarget();
         }
 
         if (ReachedPosition() && !_navAgent.isStopped)
@@ -69,9 +72,11 @@ public class EntityMovementHandler : MonoBehaviour
 
     public void MoveToEntity(GameObject entity)
     {
-        _movementTarget = entity.transform; 
+        _movementTarget = entity.transform;
+        _targetRadius = CalculateRadius(entity);
+
         _navAgent.isStopped = false;
-        _navAgent.stoppingDistance = StoppingDistanceForTarget(entity.transform);
+        _navAgent.stoppingDistance = 0;
 
         if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> is moving towards <color=cyan>{entity.name}</color>." +
             $"The current position is: <color=cyan>{(Vector2)entity.transform.position}</color>");
@@ -87,28 +92,44 @@ public class EntityMovementHandler : MonoBehaviour
 
     private bool ReachedPosition()
     {
-        if (_navAgent.remainingDistance <= _navAgent.stoppingDistance)
+        if (_navAgent.pathPending) return false; //If a path hasn't been calculated yet return false
+
+        if (_navAgent.remainingDistance > _navAgent.stoppingDistance) return false; //If the distance remaining is larger than the stopping distance return false
+
+        if (!_navAgent.hasPath || _navAgent.velocity.sqrMagnitude == 0f) //
         {
-            if (!_navAgent.hasPath || _navAgent.velocity.sqrMagnitude == 0f)
-            {
-                return true;
-            }
+            return true;
         }
 
         return false;
     }
 
-    float StoppingDistanceForTarget(Transform target)
+    private Vector2 GetDestinationFromTarget() //Calculates the destination based on the target's size
     {
-        Collider2D targetCollider = target.GetComponentInChildren<Collider2D>();
+        float offsetDistance = _targetRadius + _selfRadius + _navAgent.stoppingDistance; //How far from the center the agent should go
 
-        if (targetCollider == null)
+        Vector2 offsetDirection = (_movementTarget.position - transform.position).normalized; 
+        
+        Vector2 offsetVector = offsetDistance * offsetDirection; 
+
+        return (Vector2)_movementTarget.position - offsetVector;
+    }
+    
+    public bool CanReachPosition(Vector2 position) //Returns whether a point is inside the navmesh area
+    {
+        return NavMesh.SamplePosition((Vector3)position, out _, 0.1f, NavMesh.AllAreas);
+    }
+
+    private float CalculateRadius(GameObject obj)
+    {
+        Collider2D collider = obj.transform.root.GetComponentInChildren<Collider2D>();
+
+        if (collider == null)
         {
-            Debug.LogWarning("Attempted to calculate stopping distance from target without a collider");
+            Debug.LogWarning($"Attempted to calculate radius of a target without a collider: {obj.transform.root.name}");
             return 0;
         }
 
-        float targetSize = targetCollider.bounds.extents.magnitude;
-        return targetSize + 0.3f;
+        return collider.bounds.extents.magnitude;
     }
 }
