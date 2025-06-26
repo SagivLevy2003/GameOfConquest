@@ -2,7 +2,7 @@
 
 public class EntitySpawnFactory : Singleton<EntitySpawnFactory>
 {
-    public Entity SpawnEntityAtPosition(GameObject entityPrefab, Player owner, Vector2 position)
+    public Entity SpawnEntityAtPosition(GameObject entityPrefab, PlayerObject owner, Vector2 position)
     {
         GameObject unit = Instantiate(entityPrefab, position, Quaternion.identity); //Creates the unit object
         Entity entityScript = unit.GetComponentInChildren<Entity>();

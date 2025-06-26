@@ -8,7 +8,7 @@ public class Stat
     [SerializeField] private int _baseValue = 1;
     public int Value { get; private set; }
 
-    private List<int> _valueModifiers = new();
+    private readonly List<int> _valueModifiers = new();
 
     Stat()
     {

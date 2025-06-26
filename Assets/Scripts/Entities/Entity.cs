@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class Entity : MonoBehaviour, ITargetable, ISelectable
 {    
-    [field: SerializeField] public Player Owner { get; private set; }
+    [field: SerializeField] public PlayerObject Owner { get; private set; }
     [field: SerializeField] public int Manpower { get; private set; } = 10;
     [field: SerializeField] public CombatHandler CombatHandler { get; private set; }
 
@@ -25,7 +25,7 @@ public class Entity : MonoBehaviour, ITargetable, ISelectable
         OnEntitySelect?.Invoke();
     }
 
-    public void SetOwner(Player newOwner)
+    public void SetOwner(PlayerObject newOwner)
     {
         if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> has switched owners from <color=cyan>{Owner}</color> to: <color=cyan>{newOwner}</color>.");
 
