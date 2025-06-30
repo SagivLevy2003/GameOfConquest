@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using FishNet;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CommandResolver : Singleton<CommandResolver>
 {
     [SerializeField] private bool _logInteractions = false;
 
-    [SerializeField] private List<CommandCandidate> _commandCandidates = new(); 
+    [SerializeField] private List<CommandCandidate> _commandCandidates = new();
 
     public ICommand TryResolveCommand(GameObject subject, ICommandContext targetContext)
+
     {
         foreach (var candidate in _commandCandidates)
         {

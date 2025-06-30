@@ -1,3 +1,5 @@
+using FishNet;
+using FishNet.Managing.Server;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -34,6 +36,13 @@ public class EntityMovementHandler : MonoBehaviour
             Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>NavMeshAgent</color> on <color=cyan>{transform.root.name}</color>!\n" +
                 $"Disabling component.");
             enabled = false;
+        }
+
+
+        if (!InstanceFinder.NetworkManager.IsServerStarted)
+        {
+            _navAgent.enabled = false; //Disable the navmesh agent on the clients;
+            enabled = false; //Disable the movement handler on clients
         }
 
         _selfRadius = CalculateRadius(gameObject);

@@ -22,7 +22,7 @@ public class UnitTrainingManager : MonoBehaviour //Currently out of scope, but I
 
     public Entity TrainUnit(UnitTrainingData data)
     {
-        Entity unit = EntitySpawnFactory.Instance.SpawnEntityAtPosition(data.Prefab, ParentEntity.Owner, transform.position);
+        Entity unit = EntitySpawnFactory.SpawnEntityAtPosition(data.Prefab, ParentEntity.OwnerPlayerObject, transform.position);
 
         OnUnitTrained?.Invoke(unit); //Fires the appropriate event
 

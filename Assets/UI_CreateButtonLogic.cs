@@ -19,7 +19,7 @@ public class UI_CreateButtonLogic : MonoBehaviour
     public void OnCreateBtnClicked()
     {
         NetworkSystemManager.Instance.ConnectionManager.StartHost();
-        _createBtn.interactable = false;
+         
     }
 
     void ClientConnectionStateChanged(ClientConnectionStateArgs args)

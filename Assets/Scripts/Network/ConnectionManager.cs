@@ -1,24 +1,26 @@
 ﻿using FishNet;
 using FishNet.Transporting;
-using FishNet.Transporting.Tugboat;
-using System.Collections;
-using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
+
 
 [System.Serializable]
 public class ConnectionManager
 {
+    public ConnectionEventHandler EventHandler; //ConnectionEventHandler is a monobehaviour
+
     public UnityEvent<bool> OnSuccessfulConnection = new(); //Arguement - IsHost
 
-    [SerializeField] private ushort port = 7770;
+    public string PlayerName { get; private set; } = "tester";
+
+    [SerializeField] private ushort _port = 7770;
 
     public void StartHost()
     {
         var transport = InstanceFinder.TransportManager.Transport;
 
-        transport.SetPort(port);
+        transport.SetPort(_port);
 
         // Start the server
         InstanceFinder.ServerManager.StartConnection();
@@ -54,51 +56,22 @@ public class ConnectionManager
         }
 
         InstanceFinder.TransportManager.Transport.SetClientAddress(ip);
-        InstanceFinder.TransportManager.Transport.SetPort(port);
+        InstanceFinder.TransportManager.Transport.SetPort(_port);
 
         InstanceFinder.ClientManager.StartConnection();
     }
 
-    //public async void TryConnectWithTimeout(string ip)
-    //{
-    //    InstanceFinder.TransportManager.Transport.SetClientAddress(ip);
-    //    InstanceFinder.TransportManager.Transport.SetPort(port);
-
-    //    InstanceFinder.ClientManager.StartConnection();
-
-    //    // Wait up to 5 seconds for connection success
-    //    var timeout = Task.Delay(5000);
-    //    var connectionCompleted = new TaskCompletionSource<bool>();
-
-    //    void OnClientConnectionState(ClientConnectionStateArgs args)
-    //    {
-    //        if (args.ConnectionState == LocalConnectionState.Started)
-    //        {
-    //            connectionCompleted.TrySetResult(true);
-    //        }
-    //        else if (args.ConnectionState == LocalConnectionState.Stopped)
-    //        {
-    //            connectionCompleted.TrySetResult(false);
-    //        }
-
-    //        InstanceFinder.ClientManager.OnClientConnectionState -= OnClientConnectionState;
-    //    }
-
-    //    InstanceFinder.ClientManager.OnClientConnectionState += OnClientConnectionState;
-
-    //    var completed = await Task.WhenAny(connectionCompleted.Task, timeout);
-    //    if (completed == timeout)
-    //    {
-    //        Debug.LogWarning("Connection attempt timed out.");
-    //        InstanceFinder.ClientManager.StopConnection(); // prevents loop
-    //    }
-    //}
-
-
-    public void Shutdown()
+    public void Disconnect()
     {
-        if (!InstanceFinder.ServerManager || !InstanceFinder.ClientManager) return;
-        InstanceFinder.ServerManager.StopConnection(true);
-        InstanceFinder.ClientManager.StopConnection();
+        if (InstanceFinder.IsServerStarted)
+            InstanceFinder.ServerManager.StopConnection(true); // true = kick all clients
+
+        if (InstanceFinder.IsClientStarted)
+            InstanceFinder.ClientManager.StopConnection();
+    }
+
+    public void ChangeName(string newName)
+    {
+        PlayerName = newName;
     }
 }

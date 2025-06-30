@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 
-public class Entity : MonoBehaviour, ITargetable, ISelectable
+using FishNet.Object;
+
+public class Entity : NetworkBehaviour, ITargetable, ISelectable
 {    
-    [field: SerializeField] public PlayerObject Owner { get; private set; }
+    [field: SerializeField] public PlayerObject OwnerPlayerObject { get; private set; }
     [field: SerializeField] public int Manpower { get; private set; } = 10;
     [field: SerializeField] public CombatHandler CombatHandler { get; private set; }
 
@@ -27,9 +28,9 @@ public class Entity : MonoBehaviour, ITargetable, ISelectable
 
     public void SetOwner(PlayerObject newOwner)
     {
-        if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> has switched owners from <color=cyan>{Owner}</color> to: <color=cyan>{newOwner}</color>.");
+        if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> has switched owners from <color=cyan>{OwnerPlayerObject}</color> to: <color=cyan>{newOwner}</color>.");
 
-        Owner = newOwner;
+        OwnerPlayerObject = newOwner;
     }
 
     public int RemoveManpower(int mp, Entity source = null) //Directly reduces manpower, skipping combat calculations

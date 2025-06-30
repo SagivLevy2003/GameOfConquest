@@ -1,9 +1,10 @@
-﻿using NUnit.Framework;
+﻿using FishNet.Object;
+using NUnit.Framework;
 using System.Data;
 using UnityEngine;
 
 public class TargetingSystem : Singleton<TargetingSystem>
-{
+{ 
     public void TryTargetHoveredObject() //Check what object is being hovered
     {
         //Input validitiy check

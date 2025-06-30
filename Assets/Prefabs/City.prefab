@@ -181,8 +181,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c42b3180853da244da26a1f118a07823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Owner>k__BackingField:
-    Id: 0
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
+  <OwnerPlayerObject>k__BackingField: {fileID: 0}
   <Manpower>k__BackingField: 10
   <CombatHandler>k__BackingField: {fileID: 1016500625315971707}
   OnEntitySelect:

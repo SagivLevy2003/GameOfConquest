@@ -33,7 +33,7 @@ public class AttackUnitCommand : BaseCommand
     {
         if (_attacker == null || _targetUnit == null) return false; //Returns false if subject/target unit script is null
 
-        if (_attacker.Owner.Id == _targetUnit.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
+        if (_attacker.OwnerPlayerObject.Id == _targetUnit.OwnerPlayerObject.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
     }

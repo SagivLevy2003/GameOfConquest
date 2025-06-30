@@ -31,7 +31,7 @@ public class AttackStructureCommand : BaseCommand
     {
         if (_attacker == null || _targetStructure == null) return false; //Return false if entity scripts are missing
 
-        if (_attacker.Owner.Id == _targetStructure.Owner.Id) return false; //Returns false if the attacker and target are owned by the same player
+        if (_attacker.OwnerPlayerObject.Id == _targetStructure.OwnerPlayerObject.Id) return false; //Returns false if the attacker and target are owned by the same player
 
         return true;
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FishNet;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Entity))]
@@ -13,9 +14,12 @@ public class CommandQueue : MonoBehaviour
     [Header("Debug")]
     [field: SerializeField] private List<string> _debugQueueDisplay = new();
 
+
     private void Awake()
     {
-        AttachedEntity = GetComponent<Entity>();
+        if (!InstanceFinder.NetworkManager.IsServerStarted) enabled = false; //Disable on clients
+
+            AttachedEntity = GetComponent<Entity>();
 
         if (AttachedEntity == null)
         {

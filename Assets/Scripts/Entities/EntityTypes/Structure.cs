@@ -8,6 +8,6 @@ public class Structure : Entity
 
         if (source == null) return;
 
-        if (source is Army army) SetOwner(army.Owner);
+        if (source is Army army) SetOwner(army.OwnerPlayerObject);
     }
 }
