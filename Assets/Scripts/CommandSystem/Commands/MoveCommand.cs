@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using FishNet.Object;
+using UnityEngine;
 
 public class MoveCommand : BaseCommand //perhaps try to overhaul the command logic such that a command is in charge of executing it's exit logic rather than the Queue
 {
     private readonly Vector2 _movePos;
     private readonly Unit _unit;
     public override string Name => "Move To Position";
-    public MoveCommand(GameObject subject, Vector2 target)
+    public MoveCommand(NetworkObject subject, Vector2 target)
     {
         if (subject) _unit = subject.GetComponentInChildren<Unit>();
         _movePos = target;

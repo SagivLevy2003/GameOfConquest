@@ -1,3 +1,4 @@
+using FishNet.Object;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class UI_UnitTrainingBarManager : MonoBehaviour
         SelectionSystem.Instance.OnObjectDeselected.AddListener((_) => ClearMenu());
     }
 
-    private void TryOpenTrainingMenu(GameObject selectedObject)
+    private void TryOpenTrainingMenu(NetworkObject selectedObject)
     {
         ClearMenu();
 

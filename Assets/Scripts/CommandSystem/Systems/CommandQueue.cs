@@ -19,7 +19,7 @@ public class CommandQueue : MonoBehaviour
     {
         if (!InstanceFinder.NetworkManager.IsServerStarted) enabled = false; //Disable on clients
 
-            AttachedEntity = GetComponent<Entity>();
+        AttachedEntity = GetComponent<Entity>();
 
         if (AttachedEntity == null)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using FishNet.Object;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -6,9 +7,9 @@ using UnityEngine.EventSystems;
 public class SelectionSystem : Singleton<SelectionSystem>
 {
     [SerializeField] private bool _debugInput = false;
-    [field: SerializeField] public GameObject SelectedObject { get; private set; }
-    public UnityEvent<GameObject> OnObjectSelected = new();
-    public UnityEvent<GameObject> OnObjectDeselected = new();
+    [field: SerializeField] public NetworkObject SelectedObject { get; private set; }
+    public UnityEvent<NetworkObject> OnObjectSelected = new();
+    public UnityEvent<NetworkObject> OnObjectDeselected = new();
 
     public IEnumerator TrySelectHoveredObjectCoroutine() //Response to player 'Select' action (left click)
     {
@@ -29,19 +30,20 @@ public class SelectionSystem : Singleton<SelectionSystem>
         }
 
         ISelectable selectable = hoveredObject.GetComponentInChildren<ISelectable>();
+        NetworkObject netObj = hoveredObject.transform.root.GetComponent<NetworkObject>();
 
-        if (selectable == null)
+        if (selectable == null || !netObj)
         {
             DeselectCurrentObject();
-            return; //Return if the object isn't selectable
+            return; //Return if the object isn't selectable or networked
         }
 
         if (_debugInput) Debug.Log($"Selecting {hoveredObject}");
-        SelectObject(hoveredObject, selectable);
+        SelectObject(netObj, selectable);
     }
 
 
-    private void SelectObject(GameObject obj, ISelectable selectable) 
+    private void SelectObject(NetworkObject obj, ISelectable selectable) 
     {
         DeselectCurrentObject(); //Deselects previous object
         SelectedObject = obj; //Assigns the object
