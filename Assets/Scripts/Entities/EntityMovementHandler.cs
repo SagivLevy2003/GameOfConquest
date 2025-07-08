@@ -23,6 +23,7 @@ public class EntityMovementHandler : MonoBehaviour
     private void Awake()
     {
         if (_rigidbody == null) _rigidbody = transform.root.GetComponentInChildren<Rigidbody2D> ();
+
         if (_rigidbody == null)
         {
             Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>Rigidbody2D</color> on <color=cyan>{transform.root.name}</color>!\n" +
@@ -43,6 +44,7 @@ public class EntityMovementHandler : MonoBehaviour
         {
             _navAgent.enabled = false; //Disable the navmesh agent on the clients;
             enabled = false; //Disable the movement handler on clients
+            return;
         }
 
         _selfRadius = CalculateRadius(gameObject);

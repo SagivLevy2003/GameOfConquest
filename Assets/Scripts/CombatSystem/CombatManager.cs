@@ -1,3 +1,4 @@
+using FishNet;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ public class CombatManager : Singleton<CombatManager>
 
     private void Start()
     {
+        if (!InstanceFinder.IsServerStarted) //Disable on clients
+        {
+            enabled = false;
+            return;
+        }
+
         StartCoroutine(TickCombatInstances());
     }
 

@@ -5,7 +5,8 @@ public class MoveCommand : BaseCommand //perhaps try to overhaul the command log
 {
     private readonly Vector2 _movePos;
     private readonly Unit _unit;
-    public override string Name => "Move To Position";
+
+
     public MoveCommand(NetworkObject subject, Vector2 target)
     {
         if (subject) _unit = subject.GetComponentInChildren<Unit>();
@@ -18,10 +19,17 @@ public class MoveCommand : BaseCommand //perhaps try to overhaul the command log
         _unit.MovementHandler.OnTargetReached.AddListener(() => CommandExecutionFinished(false));
     }
 
-    public override bool IsValidForInput()
+    public override bool IsContextValid(CommandContext context)
     {
-        if (!_unit) return false; //null check
-        return _unit.MovementHandler.CanReachPosition(_movePos); //returns whether the position can be reached
+        NetworkObject subjectNetObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
+        if (!subjectNetObj) return false;
+
+        Unit unit = subjectNetObj.GetComponentInChildren<Unit>();
+        if (!unit) return false;
+
+        if (!unit.MovementHandler.CanReachPosition(context.Position)) return false;
+
+        return true;
     }
 }
 

@@ -1,18 +1,9 @@
 using UnityEngine;
 
-public interface ICommandContext 
+[System.Serializable]
+public struct CommandContext
 {
-    public int SubjectId { get; set; }
-}
-
-public struct GameObjectCommandContext : ICommandContext
-{
-    public int SubjectId { get; set; }
+    public int SubjectId;
     public int TargetId;
-}
-
-public struct PositionCommandContext : ICommandContext
-{
-    public int SubjectId { get; set; }
-    public Vector2 Position;
+    public Vector2 Position; 
 }

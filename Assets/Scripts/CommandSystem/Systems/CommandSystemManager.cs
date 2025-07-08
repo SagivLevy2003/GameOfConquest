@@ -1,22 +1,32 @@
-﻿using FishNet.Object;
+﻿using FishNet;
+using FishNet.Object;
 using System;
-using System.Runtime.CompilerServices;
+using System.Collections;
 using UnityEngine;
 
 public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
 {
     [Header("System References")]
     [SerializeField] private CommandContextResolver _contextResolver = new();
-    [SerializeField] private CommandResolver _commandResolver = new();
+    [field: SerializeField] public CommandResolver CommandResolver { get; private set; } = new();
+
+    [Header("General")]
+    [SerializeField] private float _hoveredObjectCommandPoolingDelay = 1;
 
     [Header("Debug")]
     [SerializeField] private bool _logInteractions;
 
-    private ICommandContext _currentCommandContext = null; //Used to check if the command context was changed
-    public event Action<ICommand> OnPotentialCommandChanged;
+    //Used to check if the command context was changed
+    [SerializeField] private CommandContext _currentCommandContext = new(); //The previous command context that was assigned
+    [SerializeField] private CommandCandidate _currentCommandCandidate = null;
+    //------------------------------------------------
 
-    //OVERHAUL - ADD A HOVER SYSTEM, MAYBE STATIC COMMAND DATA INSTANCES FOR ICONS N STUFF, MAKE SURE IT RUNS ONCE PER FRAME
-    //BUILD IT SO THAT RESOLVING ONLY HAPPENS WHEN AN INTERACTION ACTUALLY OCCURS!
+    public event Action<VisualCommandData> OnPotentialCommandChanged; 
+
+    private void Start()
+    {
+        StartCoroutine(PoolForCurrentCommand());
+    }
 
     public void DetermineCurrentCommand()
     {
@@ -24,53 +34,112 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
         if (!IsSelectedObjectValid(selectedObject)) return; //Returns if the subject is invalid
 
         GameObject hoveredObject = MouseInputSystem.Instance.GetHoveredObject();
-        NetworkObject hoveredObjectNetObj = hoveredObject ? hoveredObject.transform.root.GetComponent<NetworkObject>() : null; //Get the NetObj of the hovered object
 
-        ICommandContext commandContext = _contextResolver.Resolve(selectedObject, hoveredObjectNetObj); //Get a commandContext according to what is being hovered / targeted
+        CommandContext frameCommandContext = GetContext(selectedObject, hoveredObject); //Get a commandContext according to what is being hovered / targeted
 
-        if (IsSameContext(_currentCommandContext, commandContext)) //Returns if the command context wasn't changed.
+        if (frameCommandContext.Equals(_currentCommandContext)) //Returns if the command context wasn't changed.
         {
             return;
         }
 
-        _currentCommandContext = commandContext; //Update the current commandContext
+        _currentCommandContext = frameCommandContext; //Update the current commandContext
 
-        if (commandContext == null) //Issue no command if there's no fitting context
+
+        if (_logInteractions) LogContext("Command context changed: ",_currentCommandContext);
+
+        if (!TryGetValidCommandCandidate(_currentCommandContext, out CommandCandidate candidate))
         {
-            if (_logInteractions) Debug.Log($"No valid command context for: " +
-                $"Subject: <color=cyan>{selectedObject.name}</color> | <color=cyan>{hoveredObjectNetObj.name}</color>");
+            if (_logInteractions) Debug.Log($"No valid command candidate for: " +
+                $"Subject: <color=cyan>{(selectedObject ? selectedObject.name : "null")}</color> | " +
+                $"Target: <color=cyan>{(hoveredObject ? hoveredObject.name : _currentCommandContext.Position)}</color>");
 
+            _currentCommandCandidate = null;
             OnPotentialCommandChanged?.Invoke(null);
             return;
         }
 
-        ICommand command = _commandResolver.TryResolveCommand(commandContext); //Can be overhauled to be on Fixed Update, and used to display UI
-
-        if (_logInteractions) //Log the command creation
+        // Candidate is valid and new
+        if (_currentCommandCandidate != candidate)
         {
-            if (command == null)
-                Debug.Log($"No command found for: [Subject: <color=cyan>{selectedObject.name}</color>]");
-            else
-                Debug.Log($"Creating command: <color=cyan>{command.Name}</color>. " +
-                    $"[Subject: <color=cyan>{commandContext.SubjectId}</color> | Command Context: <color=cyan>{commandContext}</color>]");
+            Debug.Log($"Command candidate changed to: <color=yellow>{candidate.GetType().Name}</color>");
+            _currentCommandCandidate = candidate;
+            OnPotentialCommandChanged?.Invoke(candidate.VisualData);
+        }
+    }
+
+    public void TryExecuteCurrentCommandOnServer()
+    {
+        if (_currentCommandContext.SubjectId == -1) return; //Return if the subject is invalid
+        if (_logInteractions) LogContext("Sending command context to server:", _currentCommandContext);
+        TryExecuteCommand(_currentCommandContext);
+    }
+
+    [ServerRpc(RequireOwnership=false)]
+    public void TryExecuteCommand(CommandContext context) //Called from MouseInputSystem - that's probably not great, but it's enough within the project's scope
+    {
+        if (!InstanceFinder.IsServerStarted)
+        {
+            Debug.LogWarning($"Attempted to run ExecuteCurrentCommand from a client.");
+            return;
         }
 
-        OnPotentialCommandChanged?.Invoke(command);
+        if (!TryGetValidCommandCandidate(context, out CommandCandidate candidate)) //Get an appropriate command candidate for the context
+        {
+            Debug.LogWarning("Invalid command context received from client.");
+            return;
+        }
+
+        NetworkObject subjectNetworkObject = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
+
+        if (!subjectNetworkObject) return; //Return if there is no network object associated with the subject id
+
+        CommandQueue commandQueue = subjectNetworkObject.GetComponentInChildren<CommandQueue>();
+
+        if (!commandQueue) return; //Return if the subject doesn't have a command queue
+
+        commandQueue.ExecuteCommandImmidiately(candidate.CreateCommand(context));
+    }
+
+    IEnumerator PoolForCurrentCommand()
+    {
+        while (true)
+        {
+            DetermineCurrentCommand();
+            yield return new WaitForSeconds(_hoveredObjectCommandPoolingDelay);
+        }
+    }
+
+    private bool TryGetValidCommandCandidate(CommandContext context, out CommandCandidate candidate)
+    {
+        candidate = null;
+
+        if (context.SubjectId == -1)
+            return false;
+
+        candidate = CommandResolver.GetCommandCandidate(context);
+        return candidate != null && candidate.IsValidForContext(context);
     }
 
     private bool IsSelectedObjectValid(NetworkObject subject)
     {
-        return subject != null  
-            && subject.GetComponentInChildren<CommandQueue>() != null; //Can't give a command to something that can't recieve them, can you? :D
+        return subject != null
+            && subject.GetComponentInChildren<CommandQueue>() != null //Can't give a command to something that can't recieve them, can you? :D
+            && subject.IsOwner;
     }
 
-    private bool IsSameContext(ICommandContext a, ICommandContext b) //Manually ompares the context, cause of obnoxious struct limitations
+    private CommandContext GetContext(NetworkObject selected, GameObject hovered)
     {
-        if (a is PositionCommandContext pa && b is PositionCommandContext pb)
-            return pa.Equals(pb);
-        if (a is GameObjectCommandContext ga && b is GameObjectCommandContext gb)
-            return ga.Equals(gb);
+        var hoveredNetObj = hovered ? hovered.transform.root.GetComponent<NetworkObject>() : null;
+        return _contextResolver.Resolve(selected, hoveredNetObj);
+    }
 
-        return false;
+    private void LogContext(string body,CommandContext context)
+    {
+        string targetInfo = context.TargetId == -1
+            ? $"Position: <color=cyan>{context.Position}</color>"
+            : $"TargetId: <color=cyan>{context.TargetId}</color>";
+
+        Debug.Log($"{body}\n" +
+                  $"SubjectId: <color=cyan>{context.SubjectId}</color> | {targetInfo}");
     }
 }

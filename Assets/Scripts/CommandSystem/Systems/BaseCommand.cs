@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 
-public abstract class BaseCommand : ICommand
+public abstract class BaseCommand
 {
-    public abstract string Name { get; }
-    public readonly int Id = CommandIdGenerator.GenerateId();
-
-    public event Action OnExecutionFinished;
+    public readonly int Id = CommandIdGenerator.GenerateId(); //Generates a unique ID for the command for debugging purposes
+    public event Action OnExecutionFinished; //Called after the command is finished
 
     public abstract void Execute();
 
-    public abstract bool IsValidForInput(); //Checks if the input meets the requirements of the command
+    public abstract bool IsContextValid(CommandContext context); //Checks if the input meets the requirements of the command
 
     public virtual void CommandExecutionFinished(bool isForcedExit) //Signals the command finished execution
     {

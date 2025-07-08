@@ -3,30 +3,14 @@ using UnityEngine;
 
 public abstract class CommandCandidate : ScriptableObject
 {
-    public abstract bool IsValidForInput(ICommandContext context);
+    [field: SerializeField] public VisualCommandData VisualData { get; private set; } //Visual data related to the command (sprite, name etc)
 
-    public abstract ICommand CreateCommand(ICommandContext context);
-}
+    public abstract BaseCommand CommandInstance { get; } //A command instance for querying context validity
 
-public abstract class CommandCandidate<TContext> : CommandCandidate
-    where TContext : ICommandContext
-{
-    public override bool IsValidForInput(ICommandContext context)
+    public bool IsValidForContext(CommandContext context)
     {
-        if (context is not TContext typedContext)
-            return false;
-
-        return IsValidForInput(typedContext);
+        return CommandInstance.IsContextValid(context);
     }
 
-    public override ICommand CreateCommand(ICommandContext context)
-    {
-        if (context is not TContext typedContext)
-            throw new ArgumentException($"Invalid context type passed to {GetType().Name}. Expected {typeof(TContext).Name}, got {context?.GetType().Name}");
-
-        return CreateCommand(typedContext);
-    }
-
-    protected abstract bool IsValidForInput(TContext context);
-    protected abstract ICommand CreateCommand(TContext context);
+    public abstract BaseCommand CreateCommand(CommandContext context); 
 }

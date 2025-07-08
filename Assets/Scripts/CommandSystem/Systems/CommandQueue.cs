@@ -7,7 +7,7 @@ public class CommandQueue : MonoBehaviour
 {
     [SerializeField] private bool _logInteractions = false;
 
-    public readonly List<ICommand> Queue = new();
+    public readonly List<BaseCommand> Queue = new();
 
     public Entity AttachedEntity { get; private set; }
 
@@ -27,13 +27,13 @@ public class CommandQueue : MonoBehaviour
         }
     }
 
-    public void ExecuteCommandImmidiately(ICommand command) //clears the queue and executes a command immidiately
+    public void ExecuteCommandImmidiately(BaseCommand command) //clears the queue and executes a command immidiately
     {
         Clear();
         EnqueueCommand(command);
     }
 
-    public void EnqueueCommand(ICommand command) //Adds a command to the command execution queue
+    public void EnqueueCommand(BaseCommand command) //Adds a command to the command execution queue
     {
         if (_logInteractions) Debug.Log($"Adding command <color=cyan>{command}</color> to Queue for <color=cyan>{AttachedEntity.gameObject}</color>");
 
@@ -44,7 +44,11 @@ public class CommandQueue : MonoBehaviour
         }
 
         Queue.Add(command); //Adds the command to the queue
-        _debugQueueDisplay.Add(command.Name); //Adds the command to the debug display
+
+        //Adds the command to the debug display
+        var data = CommandSystemManager.Instance.CommandResolver.GetVisualDataFromCommand(command);
+        if (data) _debugQueueDisplay.Add(data.Name); 
+        //--------------------------------------
 
         if (Queue.Count == 1) ExecuteCommand(command); //If the queue is empty and this is the only command, execute it immidiately
     }
@@ -65,7 +69,7 @@ public class CommandQueue : MonoBehaviour
         if (Queue.Count > 0) ExecuteCommand(Queue[0]); //Execute the next command, if any
     }
 
-    private void ExecuteCommand(ICommand command) //Executes a given command
+    private void ExecuteCommand(BaseCommand command) //Executes a given command
     {
         command.OnExecutionFinished -= HandleCommandCompletion; // prevent double-subscribe
         command.OnExecutionFinished += HandleCommandCompletion;
@@ -76,7 +80,7 @@ public class CommandQueue : MonoBehaviour
     {
         if (_logInteractions) Debug.Log($"Cleared command queue for <color=cyan>{AttachedEntity.gameObject}</color>");
         
-        foreach (ICommand command in Queue) //Executes the exit logic on 
+        foreach (BaseCommand command in Queue) //Executes the exit logic on 
         {
             command.CommandExecutionFinished(true);
         }

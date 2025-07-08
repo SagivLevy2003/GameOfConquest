@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FishNet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,10 +12,14 @@ public class CombatHandler : MonoBehaviour //A generic class that inherits from 
 
     public List<UnitResistanceModifier> ResistanceModifiers = new();
 
-    public bool InCombat = false;
-
     private void Awake()
     {
+        if (!InstanceFinder.IsServerStarted) //Disable on clients
+        {
+            enabled = false;
+            return;
+        }
+
         OwnerEntity = transform.root.GetComponentInChildren<Entity>();
     }
 

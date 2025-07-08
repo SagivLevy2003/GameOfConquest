@@ -12,7 +12,7 @@ public class MouseInputSystem : Singleton<MouseInputSystem>
     public void OnTarget(InputAction.CallbackContext context) //Target Action Callback
     {
         if (!context.performed) return; //Ensures the code is only called once per interaction
-        CommandSystemManager.Instance.DetermineCurrentCommand();
+        CommandSystemManager.Instance.TryExecuteCurrentCommandOnServer();
     }
 
     public GameObject GetHoveredObject() //Returns an object with a collider that the mouse is hovering over

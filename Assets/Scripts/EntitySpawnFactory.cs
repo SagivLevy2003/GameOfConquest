@@ -1,37 +1,57 @@
 ﻿using FishNet;
+using FishNet.Connection;
 using FishNet.Object;
 using UnityEngine;
 
 public class EntitySpawnFactory
 {
-    public static Entity SpawnEntityAtPosition(GameObject entityPrefab, PlayerObject owner, Vector2 position)
+    public static Entity SpawnEntityAtPosition(GameObject entityPrefab, int newOwnerId, Vector2 position) //Spawns an entity and sets it's owner
     {
+        if (!ValidateInput(entityPrefab, newOwnerId, out PlayerObject ownerPlayerObject)) return null;
+
+
+        if (!InstanceFinder.ServerManager.Clients.TryGetValue(newOwnerId, out NetworkConnection ownerConnection))
+        {
+            Debug.LogWarning($"The ID [<color=cyan>{newOwnerId}</color>] sent to EntitySpawnFactory does not exist.");
+            return null;
+        }
+
+        GameObject entityObject = Object.Instantiate(entityPrefab, position, Quaternion.identity); 
+        Entity entityScript = entityObject.GetComponentInChildren<Entity>(); 
+
+        InstanceFinder.ServerManager.Spawn(entityObject, ownerConnection);
+
+        entityScript.SetOwner(ownerPlayerObject);
+        return entityScript;
+    }
+
+    private static bool ValidateInput(GameObject entityPrefab, int newOwnerId, out PlayerObject ownerPlayerObject)
+    {
+        ownerPlayerObject = null;
+
         if (!InstanceFinder.IsServerStarted)
         {
-            Debug.LogWarning("EntitySpawnFactory.SpawnEntityAtPosition was called on a client. Aborting.");
-            return null;
+            Debug.LogWarning("Attempted to call EntitySpawnFactory.SpawnEntityAtPosition on a client. Aborting.");
+            return false;
         }
 
-        if (entityPrefab.GetComponent<NetworkObject>() == null)
+        if (!entityPrefab.GetComponent<NetworkObject>())
         {
-            Debug.LogError("Tried to spawn a prefab without a NetworkObject.");
-            return null;
+            Debug.LogWarning("Attempted to spawn a prefab without a NetworkObject.");
+            return false;
         }
 
-        GameObject entityObject = Object.Instantiate(entityPrefab, position, Quaternion.identity); //Creates the entity object
-        Entity entityScript = entityObject.GetComponentInChildren<Entity>();
-
-        if (entityScript == null) 
+        if (!NetworkSystemManager.Instance.PlayerObjectManager.PlayerObjects.TryGetValue(newOwnerId, out ownerPlayerObject))
         {
-            Debug.LogWarning($"A prefab was instantiated using the entity spawn factory, but it doesn't contain an entity script: <color=cyan>{entityObject.name}</color>\n" +
-                $"Destroying the instantiated object.");
-            Object.Destroy(entityObject);
-            return null;
+            Debug.LogWarning("Attempted to spawn an entity with a null Player Object.");
+            return false;
         }
 
-        InstanceFinder.ServerManager.Spawn(entityObject);
+        if (!entityPrefab.GetComponent<Entity>())
+        {
+            Debug.LogWarning("Attempted to spawn an entity with no... entity script (???). ");
+        }
 
-        entityScript.SetOwner(owner);
-        return entityScript;
+        return true;
     }
 }

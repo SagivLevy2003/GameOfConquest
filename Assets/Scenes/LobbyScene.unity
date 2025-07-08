@@ -975,7 +975,7 @@ PrefabInstance:
       objectReference: {fileID: 7498321427728287160, guid: 0815f276b505bd2438406ea054768e03, type: 3}
     - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: Spawns.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7443408887813606060, guid: 0b650fca685f2eb41a86538aa883e4c1, type: 3}
       propertyPath: 'Spawns.Array.data[0]'
@@ -3570,6 +3570,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
     _port: 7770
+  PlayerObjectManager:
+    PlayerObjectContainer: {fileID: 2044843278}
   OnPlayerConnectionStateChange:
     m_PersistentCalls:
       m_Calls: []
@@ -4072,11 +4074,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2644003623104737786, guid: 72d5649e337e45d4fbcd347ba8626118, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.76553345
       objectReference: {fileID: 0}
     - target: {fileID: 2644003623104737786, guid: 72d5649e337e45d4fbcd347ba8626118, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 183.2765
       objectReference: {fileID: 0}
     - target: {fileID: 2850969789074329490, guid: 72d5649e337e45d4fbcd347ba8626118, type: 3}
       propertyPath: m_Pivot.x
@@ -4168,7 +4170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3651878363050075486, guid: 72d5649e337e45d4fbcd347ba8626118, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 3651878363050075486, guid: 72d5649e337e45d4fbcd347ba8626118, type: 3}
       propertyPath: m_AnchoredPosition.x

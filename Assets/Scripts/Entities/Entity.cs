@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
-
 using FishNet.Object;
+using FishNet;
+using FishNet.Connection;
 
 public class Entity : NetworkBehaviour, ITargetable, ISelectable
 {    
@@ -29,7 +30,13 @@ public class Entity : NetworkBehaviour, ITargetable, ISelectable
     public void SetOwner(PlayerObject newOwner)
     {
         if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> has switched owners from <color=cyan>{OwnerPlayerObject}</color> to: <color=cyan>{newOwner}</color>.");
+        
+        if (!InstanceFinder.ServerManager.Clients.TryGetValue(newOwner.Id.Value, out NetworkConnection ownerConnection))
+        {
+            Debug.LogWarning($"No NetworkConnection object with the ID: [<color=cyan>{newOwner.Id.Value}</color>]");
+        }
 
+        GetComponent<NetworkObject>().GiveOwnership(ownerConnection);
         OwnerPlayerObject = newOwner;
     }
 

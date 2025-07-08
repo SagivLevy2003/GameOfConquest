@@ -1,27 +1,25 @@
 using FishNet;
 using FishNet.Object;
+using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Command Candidates/Move To Position")]
-public class MoveCommandCandidate : CommandCandidate<PositionCommandContext>
+[CreateAssetMenu(menuName = "Commands/Candidates/Move To Position")]
+public class MoveCommandCandidate : CommandCandidate
 {
-    protected override bool IsValidForInput(PositionCommandContext context)
-    {
-        Vector2 position = context.Position;
+    public override BaseCommand CommandInstance => new MoveCommand(null, Vector2.zero);
 
-        if (!InstanceFinder.ServerManager.Objects.Spawned.TryGetValue(context.SubjectId, out NetworkObject subject))
+
+    public override BaseCommand CreateCommand(CommandContext context)
+    {
+        NetworkObject netObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
+
+        if (!netObj) 
         {
-            Debug.LogWarning($"Couldn't find a subject with Id: <color=cyan>{context.SubjectId}</color>");
-            return false;
+            Debug.LogWarning($"Attempted to create a command for a null NetworkObject with id: <color=cyan>{context.SubjectId}</color>");
+            return null;
         }
 
-        return new MoveCommand(subject, position).IsValidForInput();
-    }
-
-    protected override ICommand CreateCommand(PositionCommandContext context)
-    {
-        InstanceFinder.ServerManager.Objects.Spawned.TryGetValue(context.SubjectId, out NetworkObject subject);
-        return new MoveCommand(subject, context.Position);
+        return new MoveCommand(netObj, context.Position);
     }
 }
 
