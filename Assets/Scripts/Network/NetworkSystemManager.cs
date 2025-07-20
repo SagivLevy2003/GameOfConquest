@@ -15,6 +15,8 @@ public class NetworkSystemManager : Singleton<NetworkSystemManager>
         DontDestroyOnLoad(this);
         AuthenticationManager.AuthenticatePlayer();
         ConnectionManager.EventHandler = GetComponentInChildren<ConnectionEventHandler>();
+
+        
     }
 
     private void OnApplicationQuit()

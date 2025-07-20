@@ -1,9 +1,16 @@
 ﻿using FishNet;
 using FishNet.Object;
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class NetworkObjectManager
 {
+    public bool TryGetNetworkObjectById(int id, out NetworkObject networkObject, bool log_on_fail = true)
+    {
+        networkObject = GetNetworkObjectById(id, log_on_fail);
+        return networkObject != null;
+    }
+
     public NetworkObject GetNetworkObjectById(int id, bool log_on_fail = true)
     {
         NetworkObject netObj;

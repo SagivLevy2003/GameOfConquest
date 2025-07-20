@@ -21,11 +21,11 @@ public class MoveCommand : BaseCommand //perhaps try to overhaul the command log
 
     public override bool IsContextValid(CommandContext context)
     {
-        NetworkObject subjectNetObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
-        if (!subjectNetObj) return false;
+        if (context.TargetId != -1) return false;
 
-        Unit unit = subjectNetObj.GetComponentInChildren<Unit>();
-        if (!unit) return false;
+        if (!NetworkSystemManager.Instance.NetworkObjectManager.TryGetNetworkObjectById(context.SubjectId, out NetworkObject subjectNetObj)) return false;
+
+        if (!subjectNetObj.TryGetComponent(out Unit unit)) return false;
 
         if (!unit.MovementHandler.CanReachPosition(context.Position)) return false;
 

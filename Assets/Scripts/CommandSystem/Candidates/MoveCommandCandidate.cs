@@ -11,9 +11,7 @@ public class MoveCommandCandidate : CommandCandidate
 
     public override BaseCommand CreateCommand(CommandContext context)
     {
-        NetworkObject netObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
-
-        if (!netObj) 
+        if (!NetworkSystemManager.Instance.NetworkObjectManager.TryGetNetworkObjectById(context.SubjectId, out NetworkObject netObj)) 
         {
             Debug.LogWarning($"Attempted to create a command for a null NetworkObject with id: <color=cyan>{context.SubjectId}</color>");
             return null;

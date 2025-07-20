@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{bfdbb8b0-f9da-4896-aa74-12dc22312680}">
+		<property name="assetPath">
+			<value>GunnerSounds.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>61.25714285714286</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{0716aef9-4261-4ebd-9dd7-62e8396465ac}</destination>
+		</relationship>
+	</object>
+</objects>

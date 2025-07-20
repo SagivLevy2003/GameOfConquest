@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67c02cb1e7be26d478032089e5588474, type: 3}
   m_Name: AttackUnit
   m_EditorClassIdentifier: 
+  <VisualData>k__BackingField: {fileID: 11400000, guid: 2d8947b2bce624b439e2d16ce1a601ef, type: 2}

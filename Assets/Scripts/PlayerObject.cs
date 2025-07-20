@@ -1,15 +1,16 @@
-using FishNet;
 using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using Unity.Services.Matchmaker.Models;
-using UnityEngine;
+using System.Collections.Generic;
+
 
 [System.Serializable]
 public class PlayerObject : NetworkBehaviour
 {
     public readonly SyncVar<int> Id = new();
     public readonly SyncVar<string> Name = new();
+
+    public readonly List<Entity> OwnedEntities = new();
 
     public override void OnSpawnServer(NetworkConnection connection)
     {

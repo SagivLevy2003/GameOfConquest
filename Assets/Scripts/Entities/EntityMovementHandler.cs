@@ -1,5 +1,6 @@
 using FishNet;
 using FishNet.Managing.Server;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -58,10 +59,9 @@ public class EntityMovementHandler : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_movementTarget)
-        {
-            _navAgent.destination = GetDestinationFromTarget();
-        }
+        if (!_movementTarget) return;
+
+        _navAgent.destination = GetDestinationFromTarget();
 
         if (ReachedPosition() && !_navAgent.isStopped)
         {
@@ -90,22 +90,18 @@ public class EntityMovementHandler : MonoBehaviour
         _navAgent.stoppingDistance = 0;
 
         if (_logActions) Debug.Log($"<color=cyan>{transform.root.gameObject.name}</color> is moving towards <color=cyan>{entity.name}</color>." +
-            $"The current position is: <color=cyan>{(Vector2)entity.transform.position}</color>");
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (_displayNavMeshTarget)
-        {
-            if (_navAgent.destination != null) Gizmos.DrawWireSphere(_navAgent.destination, 1);
-        }
+            $"Heading towards the position: <color=cyan>{(Vector2)entity.transform.position}</color>");
     }
 
     private bool ReachedPosition()
     {
+        //if (_logActions) Debug.Log($"pathPending: {_navAgent.pathPending}" +
+        //    $" | remainingDistance: {_navAgent.remainingDistance}, stoppingDistance: {_navAgent.stoppingDistance}" +
+        //    $" | hasPath: {_navAgent.hasPath}, velocity square magnitude: {_navAgent.velocity.sqrMagnitude}");
+
         if (_navAgent.pathPending) return false; //If a path hasn't been calculated yet return false
 
-        if (_navAgent.remainingDistance > _navAgent.stoppingDistance) return false; //If the distance remaining is larger than the stopping distance return false
+        if (_navAgent.remainingDistance > _navAgent.stoppingDistance + 0.1f) return false; //If the distance remaining is larger than the stopping distance return false
 
         if (!_navAgent.hasPath || _navAgent.velocity.sqrMagnitude == 0f) //
         {
@@ -142,5 +138,13 @@ public class EntityMovementHandler : MonoBehaviour
         }
 
         return collider.bounds.extents.magnitude;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_displayNavMeshTarget)
+        {
+            if (_navAgent.destination != null) Gizmos.DrawWireSphere(_navAgent.destination, 1);
+        }
     }
 }

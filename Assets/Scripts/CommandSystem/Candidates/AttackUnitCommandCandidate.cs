@@ -1,19 +1,17 @@
-﻿//using UnityEngine;
+﻿using FishNet.Object;
+using System.Windows.Input;
+using UnityEngine;
 
-//[CreateAssetMenu(menuName = "Command Candidates/Attack Unit")]
-//public class AttackUnitCommandCandidate : CommandCandidate
-//{
-//    public override bool IsValidForInput(GameObject subject, ICommandContext target)
-//    {
-//        GameObject targetObject = target is GameObjectCommandContext context ? context.Object : null;
+[CreateAssetMenu(menuName = "Commands/Candidates/Attack Unit")]
+public class AttackUnitCommandCandidate : CommandCandidate
+{
+    public override BaseCommand CommandInstance => new AttackUnitCommand(null, null);
 
-//        return new AttackUnitCommand(subject, targetObject).IsValidForInput();
-//    }
+    public override BaseCommand CreateCommand(CommandContext context)
+    {
+        NetworkObject subjectNetObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
+        NetworkObject targetNetObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.TargetId);
 
-//    public override ICommand CreateCommand(GameObject subject, ICommandContext target)
-//    {
-//        GameObject targetObject = target is GameObjectCommandContext context ? context.Object : null;
-
-//        return new AttackUnitCommand(subject, targetObject);
-//    }
-//}
+        return new AttackUnitCommand(subjectNetObj, targetNetObj);
+    }
+}

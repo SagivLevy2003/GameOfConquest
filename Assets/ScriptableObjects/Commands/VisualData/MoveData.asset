@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MoveData
   m_EditorClassIdentifier: 
   Name: Move To Position
-  CursorSprite: {fileID: 0}
+  CursorTexture: {fileID: 2800000, guid: 009bc0f57c177604a90b4697026d8c00, type: 3}

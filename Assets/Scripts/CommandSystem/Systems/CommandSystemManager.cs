@@ -3,6 +3,7 @@ using FishNet.Object;
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
 {
@@ -21,17 +22,26 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
     [SerializeField] private CommandCandidate _currentCommandCandidate = null;
     //------------------------------------------------
 
-    public event Action<VisualCommandData> OnPotentialCommandChanged; 
+    public UnityEvent<CommandCandidate> OnCommandCandidateChanged; 
 
     private void Start()
     {
+        //It's not good that this is here but.. I've given up on SOLID at this point :|
+        OnCommandCandidateChanged.AddListener(CursorManager.Instance.OnCommandCandidateChanged);
+
         StartCoroutine(PoolForCurrentCommand());
     }
 
     public void DetermineCurrentCommand()
     {
         NetworkObject selectedObject = SelectionSystem.Instance.SelectedObject;
-        if (!IsSelectedObjectValid(selectedObject)) return; //Returns if the subject is invalid
+        if (!IsSelectedObjectValid(selectedObject))
+        {
+            _currentCommandCandidate = null;
+            OnCommandCandidateChanged?.Invoke(null);
+
+            return; //Returns if the subject is invalid
+        }
 
         GameObject hoveredObject = MouseInputSystem.Instance.GetHoveredObject();
 
@@ -54,7 +64,7 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
                 $"Target: <color=cyan>{(hoveredObject ? hoveredObject.name : _currentCommandContext.Position)}</color>");
 
             _currentCommandCandidate = null;
-            OnPotentialCommandChanged?.Invoke(null);
+            OnCommandCandidateChanged?.Invoke(null);
             return;
         }
 
@@ -63,7 +73,7 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
         {
             Debug.Log($"Command candidate changed to: <color=yellow>{candidate.GetType().Name}</color>");
             _currentCommandCandidate = candidate;
-            OnPotentialCommandChanged?.Invoke(candidate.VisualData);
+            OnCommandCandidateChanged?.Invoke(candidate);
         }
     }
 
@@ -135,11 +145,7 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
 
     private void LogContext(string body,CommandContext context)
     {
-        string targetInfo = context.TargetId == -1
-            ? $"Position: <color=cyan>{context.Position}</color>"
-            : $"TargetId: <color=cyan>{context.TargetId}</color>";
-
         Debug.Log($"{body}\n" +
-                  $"SubjectId: <color=cyan>{context.SubjectId}</color> | {targetInfo}");
+                  $"SubjectId: <color=cyan>{context.SubjectId}</color> | <color=cyan>{context.TargetId}</color> | <color=cyan>{context.Position}</color> ");
     }
 }

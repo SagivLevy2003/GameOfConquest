@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FishNet.Object;
+using System;
 
 public abstract class BaseCommand
 {
@@ -13,5 +14,13 @@ public abstract class BaseCommand
     {
         if (!isForcedExit) OnExecutionFinished?.Invoke();
         OnExecutionFinished = null;  //Clears the event to avoid the memory being left
+    }
+
+    protected bool TryParseContext(CommandContext context, out NetworkObject subject, out NetworkObject target)
+    {
+        subject = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
+        target = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.TargetId);
+
+        return subject && target;
     }
 }

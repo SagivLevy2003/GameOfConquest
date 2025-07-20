@@ -15,16 +15,13 @@ public class AttackUnitCommand : BaseCommand
 
     public override void Execute()
     {
-        Debug.Log($"executing command with id {Id}");
         _attacker.MovementHandler.MoveToEntity(_targetUnit.gameObject);
-
         _attacker.MovementHandler.OnTargetReached.AddListener(InitiateAttack);
     }
 
     public void InitiateAttack()
     {
         _combatInstance = CombatManager.Instance.InitiateCombat(_attacker, _targetUnit);
-        Debug.Log($"attacking, {Id}");
     }
 
     public override void CommandExecutionFinished(bool isForcedExit)
@@ -36,10 +33,7 @@ public class AttackUnitCommand : BaseCommand
 
     public override bool IsContextValid(CommandContext context)
     {
-        NetworkObject subjectNetObj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.SubjectId);
-        NetworkObject targetNetobj = NetworkSystemManager.Instance.NetworkObjectManager.GetNetworkObjectById(context.TargetId);
-
-        if (!subjectNetObj || !targetNetobj) return false;
+        if (TryParseContext(context, out NetworkObject subjectNetObj, out NetworkObject targetNetobj)) return false;
 
         if (!subjectNetObj.GetComponent<Army>() || !targetNetobj.GetComponent<Unit>()) return false;
 

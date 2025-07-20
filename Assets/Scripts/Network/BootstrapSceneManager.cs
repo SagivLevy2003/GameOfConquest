@@ -9,7 +9,6 @@ public class BootstrapSceneManager : Singleton<BootstrapSceneManager>
 
     private void Start()
     {
-        DontDestroyOnLoad(this);
         _currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
     }
 

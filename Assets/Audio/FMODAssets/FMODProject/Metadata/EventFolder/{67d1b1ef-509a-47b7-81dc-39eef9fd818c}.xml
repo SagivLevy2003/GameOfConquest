@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EventFolder" id="{67d1b1ef-509a-47b7-81dc-39eef9fd818c}">
+		<property name="name">
+			<value>Battle Ambient</value>
+		</property>
+		<relationship name="folder">
+			<destination>{a433badd-df0f-4a6e-b250-f30e65043835}</destination>
+		</relationship>
+	</object>
+</objects>

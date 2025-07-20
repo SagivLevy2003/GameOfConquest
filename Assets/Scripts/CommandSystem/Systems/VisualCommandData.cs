@@ -4,5 +4,5 @@
 public class VisualCommandData : ScriptableObject
 {
     public string Name;
-    public Sprite CursorSprite;
+    public Texture2D CursorTexture;
 }
