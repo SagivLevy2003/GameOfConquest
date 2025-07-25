@@ -11,6 +11,7 @@ public class CombatInstance
 
     public event Action<CombatInstance> OnCombatEnd;
 
+
     public CombatInstance(Entity attacker, Entity defender)
     {
         Attacker = attacker;
@@ -22,19 +23,26 @@ public class CombatInstance
 
     public void TickCombat() //Calculates the damage each party in combat should deal, and deals them at the same time
     {
-        int attackerPower = Attacker.CombatHandler.AttackPower.Value;
-        AttackType attackerType = Attacker.CombatHandler.AttackType;
+        float distance = Vector2.Distance(Attacker.transform.position, Defender.transform.position);
 
-        int defenderPower = Attacker.CombatHandler.AttackPower.Value;
-        AttackType defenderType = Attacker.CombatHandler.AttackType;
+        if (Attacker.CombatHandler.AttackRange < distance && Defender.CombatHandler.AttackRange < distance) EndCombatInstance();
 
-        Defender.CombatHandler.ApplyDamage(new() { AttackPower = attackerPower, Type = attackerType, Source = Attacker });
-        Attacker.CombatHandler.ApplyDamage(new() { AttackPower = defenderPower, Type = defenderType, Source = Defender });
+        if (Attacker.CombatHandler.AttackRange >= distance) ApplyDamage(Attacker, Defender);
+        if (Defender.CombatHandler.AttackRange >= distance) ApplyDamage(Defender, Attacker);
     }
 
-    public void EndCombatInstance() //Called only when trying to end combat by moving one of the involved parties
+    public void EndCombatInstance() //End combat immidiately
     {
         Attacker.OnManpowerDepletion.RemoveListener((_) => EndCombatInstance());
         Defender.OnManpowerDepletion.RemoveListener((_) => EndCombatInstance());
         OnCombatEnd?.Invoke(this);
-    }}
+    }
+
+    private void ApplyDamage(Entity attackingEntity, Entity targetEntity)
+    {
+        int power = attackingEntity.CombatHandler.AttackPower.Value;
+        AttackType type = attackingEntity.CombatHandler.AttackType;
+
+        targetEntity.CombatHandler.ApplyDamage(new() { AttackPower = power, Type = type, Source = attackingEntity});
+    }
+}

@@ -13,6 +13,7 @@ public class NetworkObjectManager
 
     public NetworkObject GetNetworkObjectById(int id, bool log_on_fail = true)
     {
+        if (id == -1) return null;
         NetworkObject netObj;
 
         if (InstanceFinder.IsServerStarted)

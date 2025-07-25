@@ -1,3 +1,4 @@
+using Mono.CSharp;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,8 @@ public class CameraControlManager : MonoBehaviour
 
     private void Update()
     {
+        if (!Application.isFocused) return;
+
         Vector2 dir = Vector2.zero;
 
         if (_movementDirection != Vector2.zero) //Handles keyboard movement
@@ -35,6 +38,7 @@ public class CameraControlManager : MonoBehaviour
         }
         else //Handles edge-scrolling movement
         {
+
             if (Input.mousePosition.x > Screen.width - _edgeSize) dir += Vector2.right;
             else if (Input.mousePosition.x < _edgeSize) dir += Vector2.left;
 

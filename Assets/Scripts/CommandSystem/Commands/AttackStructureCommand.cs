@@ -1,6 +1,4 @@
 ﻿using FishNet.Object;
-using System;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 
 public class AttackStructureCommand : BaseCommand
@@ -36,7 +34,7 @@ public class AttackStructureCommand : BaseCommand
 
     public override bool IsContextValid(CommandContext context)
     {
-        if (TryParseContext(context, out NetworkObject subjectNetObj, out NetworkObject targetNetobj)) return false;
+        if (!TryParseContext(context, out NetworkObject subjectNetObj, out NetworkObject targetNetobj)) return false;
 
         if (!subjectNetObj.GetComponent<Army>() || !targetNetobj.GetComponent<Structure>()) return false;
 

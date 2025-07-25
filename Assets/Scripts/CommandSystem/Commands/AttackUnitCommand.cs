@@ -28,14 +28,14 @@ public class AttackUnitCommand : BaseCommand
     {
         base.CommandExecutionFinished(isForcedExit);
         _attacker.MovementHandler.OnTargetReached.RemoveListener(InitiateAttack);
-        _combatInstance?.EndCombatInstance();
+        //_combatInstance?.EndCombatInstance();
     }
 
     public override bool IsContextValid(CommandContext context)
     {
-        if (TryParseContext(context, out NetworkObject subjectNetObj, out NetworkObject targetNetobj)) return false;
+        if (!TryParseContext(context, out NetworkObject subjectNetObj, out NetworkObject targetNetobj)) return false;
 
-        if (!subjectNetObj.GetComponent<Army>() || !targetNetobj.GetComponent<Unit>()) return false;
+        if (!subjectNetObj.GetComponent<Army>() || !targetNetobj.GetComponent<Unit>()) return false; //Stop from attacking allies
 
         return true;
     }

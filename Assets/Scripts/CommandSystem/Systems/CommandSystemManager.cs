@@ -26,7 +26,7 @@ public class CommandSystemManager : NetworkSingleton<CommandSystemManager>
 
     private void Start()
     {
-        //It's not good that this is here but.. I've given up on SOLID at this point :|
+        //It's not good that this is here but.. I've given up on SOLID at this point
         OnCommandCandidateChanged.AddListener(CursorManager.Instance.OnCommandCandidateChanged);
 
         StartCoroutine(PoolForCurrentCommand());

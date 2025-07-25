@@ -59,6 +59,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -80,6 +82,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -186,8 +189,8 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 2444643739390943790}
   _networkObjectCache: {fileID: 0}
   <OwnerPlayerObject>k__BackingField: {fileID: 0}
-  <Manpower>k__BackingField: 10
-  <CombatHandler>k__BackingField: {fileID: 1016500625315971707}
+  _currentManpower: 0
+  _logActions: 0
   OnEntitySelect:
     m_PersistentCalls:
       m_Calls: []
@@ -197,7 +200,6 @@ MonoBehaviour:
   OnManpowerDepletion:
     m_PersistentCalls:
       m_Calls: []
-  _logActions: 0
   _manpowerGenerationPerTick: 1
   _productionTickRate: 1
   _trainingManager: {fileID: 0}
@@ -263,7 +265,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 65535
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17519964944831195421
+  <AssetPathHash>k__BackingField: 11098539762208224402
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
@@ -317,6 +319,13 @@ MonoBehaviour:
   <OwnerEntity>k__BackingField: {fileID: 0}
   <AttackPower>k__BackingField:
     _baseValue: 1
+    <Value>k__BackingField: 1
+    <AdditiveValueModifiers>k__BackingField: 
+    <MultiplicativeValueModifiers>k__BackingField: []
+    OnValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  <AttackRange>k__BackingField: 0
   <AttackType>k__BackingField: 5
+  _displayRange: 0
   ResistanceModifiers: []
-  InCombat: 0

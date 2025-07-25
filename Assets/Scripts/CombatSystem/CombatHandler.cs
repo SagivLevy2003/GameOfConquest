@@ -7,8 +7,13 @@ using UnityEngine;
 public class CombatHandler : MonoBehaviour //A generic class that inherits from interfaces to define it's behaviour
 {
     [field: SerializeField] public Entity OwnerEntity { get; private set; }
-    [field: SerializeField] public Stat AttackPower { get; private set; }
+    [field: SerializeField] public IntStat AttackPower { get; private set; }
+    [field: SerializeField] public float AttackRange { get; private set; }
     [field: SerializeField] public AttackType AttackType { get; private set; }
+
+    [Header("Debug")]
+    [SerializeField] private bool _displayRange = false;
+
 
     public List<UnitResistanceModifier> ResistanceModifiers = new();
 
@@ -37,6 +42,15 @@ public class CombatHandler : MonoBehaviour //A generic class that inherits from 
         attackPower = (int)Math.Ceiling(attackPower * resistanceMulti); //Multiplies the attack power by the multiplier and rounds it up
 
         OwnerEntity.RemoveManpower(attackPower, args.Source); //Reduces the manpower from the entity
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_displayRange)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, AttackRange);
+        }
     }
 }
 

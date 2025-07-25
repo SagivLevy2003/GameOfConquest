@@ -23,16 +23,17 @@ public class CombatManager : Singleton<CombatManager>
 
     IEnumerator TickCombatInstances()
     {
-        List<CombatInstance> temp = _combatInstances.ToList();
-
-        foreach (var instance in temp)
+        while (true)
         {
-            instance.TickCombat();
+            List<CombatInstance> temp = _combatInstances.ToList();
+
+            foreach (var instance in temp)
+            {
+                instance.TickCombat();
+            }
+
+            yield return new WaitForSeconds(_combatTickRate);
         }
-
-        yield return new WaitForSeconds(_combatTickRate);
-
-        StartCoroutine(TickCombatInstances());
     }
 
     public CombatInstance InitiateCombat(Entity attacker, Entity defender) //Called to initiate combat between two entites, returns the combat instance 

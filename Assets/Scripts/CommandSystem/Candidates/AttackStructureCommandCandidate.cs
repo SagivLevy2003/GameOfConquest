@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Command Candidates/Attack City")]
 public class AttackStructureCommandCandidate : CommandCandidate
 {
-    public override BaseCommand CommandInstance => throw new System.NotImplementedException();
+    public override BaseCommand CommandInstance => new AttackStructureCommand(null, null);
 
     public override BaseCommand CreateCommand(CommandContext context)
     {

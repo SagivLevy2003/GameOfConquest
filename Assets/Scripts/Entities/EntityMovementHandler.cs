@@ -8,38 +8,27 @@ using UnityEngine.Events;
 
 public class EntityMovementHandler : MonoBehaviour
 {
+    [SerializeField] private FloatStat _moveSpeed;
+
+    [Header("References")]
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private NavMeshAgent _navAgent;
 
-    [SerializeField] private Transform _movementTarget = null;
-    private float _targetRadius;
-    private float _selfRadius;
-
+    [Header("Events")]
     public UnityEvent OnTargetReached = new();
 
     [Header("Debug")]
     [SerializeField] private bool _displayNavMeshTarget = false;
     [SerializeField] private bool _logActions = false;
+    [SerializeField, ReadOnly] private Transform _movementTarget = null;
+
+    //private unserialized
+    private float _targetRadius;
+    private float _selfRadius;
 
     private void Awake()
     {
-        if (_rigidbody == null) _rigidbody = transform.root.GetComponentInChildren<Rigidbody2D> ();
-
-        if (_rigidbody == null)
-        {
-            Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>Rigidbody2D</color> on <color=cyan>{transform.root.name}</color>!\n" +
-                $"Disabling component.");
-            enabled = false;
-        }
-
-        if (_navAgent == null) _navAgent = transform.root.GetComponentInChildren<NavMeshAgent>();
-        if (_navAgent == null)
-        {
-            Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>NavMeshAgent</color> on <color=cyan>{transform.root.name}</color>!\n" +
-                $"Disabling component.");
-            enabled = false;
-        }
-
+        SetReferences();
 
         if (!InstanceFinder.NetworkManager.IsServerStarted)
         {
@@ -48,13 +37,21 @@ public class EntityMovementHandler : MonoBehaviour
             return;
         }
 
-        _selfRadius = CalculateRadius(gameObject);
+        _selfRadius = HelperMethods.CalculateRadius(gameObject);
 
         //NavMeshAgent setup
         _navAgent.updateRotation = false;
         _navAgent.updateUpAxis = false;
         _navAgent.isStopped = true;
         //
+
+        Debug.Log($"movespeed: {_moveSpeed.Value}");
+        _navAgent.speed = _moveSpeed.Value;
+    }
+
+    private void OnMoveSpeedChanged(float _, float currSpeed)
+    {
+        _navAgent.speed = currSpeed;
     }
 
     private void FixedUpdate()
@@ -84,7 +81,7 @@ public class EntityMovementHandler : MonoBehaviour
     public void MoveToEntity(GameObject entity)
     {
         _movementTarget = entity.transform;
-        _targetRadius = CalculateRadius(entity);
+        _targetRadius = HelperMethods.CalculateRadius(entity);
 
         _navAgent.isStopped = false;
         _navAgent.stoppingDistance = 0;
@@ -127,17 +124,28 @@ public class EntityMovementHandler : MonoBehaviour
         return NavMesh.SamplePosition((Vector3)position, out _, 0.1f, NavMesh.AllAreas);
     }
 
-    private float CalculateRadius(GameObject obj)
+    private bool SetReferences()
     {
-        Collider2D collider = obj.transform.root.GetComponentInChildren<Collider2D>();
+        if (_rigidbody == null) _rigidbody = transform.root.GetComponentInChildren<Rigidbody2D>();
 
-        if (collider == null)
+        if (_rigidbody == null)
         {
-            Debug.LogWarning($"Attempted to calculate radius of a target without a collider: {obj.transform.root.name}");
-            return 0;
+            Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>Rigidbody2D</color> on <color=cyan>{transform.root.name}</color>!\n" +
+                $"Disabling component.");
+            enabled = false;
+            return false;
         }
 
-        return collider.bounds.extents.magnitude;
+        if (_navAgent == null) _navAgent = transform.root.GetComponentInChildren<NavMeshAgent>();
+        if (_navAgent == null)
+        {
+            Debug.LogWarning($"EntityMovementHandler component exists without a <color=cyan>NavMeshAgent</color> on <color=cyan>{transform.root.name}</color>!\n" +
+                $"Disabling component.");
+            enabled = false;
+            return false;
+        }
+
+        return true;
     }
 
     private void OnDrawGizmos()
@@ -146,5 +154,15 @@ public class EntityMovementHandler : MonoBehaviour
         {
             if (_navAgent.destination != null) Gizmos.DrawWireSphere(_navAgent.destination, 1);
         }
+    }
+
+    private void OnEnable()
+    {
+        _moveSpeed.OnValueChanged.AddListener(OnMoveSpeedChanged);
+    }
+
+    private void OnDisable()
+    {
+        _moveSpeed.OnValueChanged.RemoveListener(OnMoveSpeedChanged);
     }
 }

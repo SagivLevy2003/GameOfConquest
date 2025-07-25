@@ -44,14 +44,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c4d91f42625c9c429f0a7ac2d90f4f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed:
+    _baseValue: 5
+    <Value>k__BackingField: 5
+    <AdditiveValueModifiers>k__BackingField: 
+    <MultiplicativeValueModifiers>k__BackingField: []
+    OnValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
   _rigidbody: {fileID: 2991685141521221378}
   _navAgent: {fileID: 6467184259133530056}
-  _movementTarget: {fileID: 0}
   OnTargetReached:
     m_PersistentCalls:
       m_Calls: []
   _displayNavMeshTarget: 1
   _logActions: 1
+  _movementTarget: {fileID: 0}
 --- !u!1 &3754846021425815978
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,12 +104,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98aaf91d8ae1bb84f909010d9c60ad82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <OwnerEntity>k__BackingField: {fileID: 0}
+  <OwnerEntity>k__BackingField: {fileID: 5217999918721792257}
   <AttackPower>k__BackingField:
     _baseValue: 1
-  <AttackType>k__BackingField: 0
-  ResistanceModifiers: []
-  InCombat: 0
+    <Value>k__BackingField: 1
+    <AdditiveValueModifiers>k__BackingField: 
+    <MultiplicativeValueModifiers>k__BackingField: []
+    OnValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
+  <AttackRange>k__BackingField: 1.5
+  <AttackType>k__BackingField: 1
+  _displayRange: 0
+  ResistanceModifiers:
+  - Type: 0
+    DamageMultiplier: 2
 --- !u!1 &5014867843360979945
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,8 +128,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2677785277265113320}
+  - component: {fileID: 5217999918721792257}
   - component: {fileID: 6625862907023458409}
-  - component: {fileID: 4593821650549105640}
   - component: {fileID: 6467184259133530056}
   - component: {fileID: 3074651694836985314}
   - component: {fileID: 8085356547488904495}
@@ -144,6 +161,33 @@ Transform:
   - {fileID: 315477636092355838}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5217999918721792257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5014867843360979945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d92cb10ed359fa540b0b10cc4ad1694f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Unit
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 3300923522360156658}
+  _networkObjectCache: {fileID: 0}
+  <OwnerPlayerObject>k__BackingField: {fileID: 0}
+  _currentManpower: 0
+  _logActions: 0
+  OnEntitySelect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEntityDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManpowerDepletion:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &6625862907023458409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,34 +202,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logInteractions: 0
   _debugQueueDisplay: []
---- !u!114 &4593821650549105640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5014867843360979945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d60d0885778310e418e8f1fc2b768c1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 3300923522360156658}
-  _networkObjectCache: {fileID: 3300923522360156658}
-  <OwnerPlayerObject>k__BackingField: {fileID: 0}
-  <Manpower>k__BackingField: 10
-  <CombatHandler>k__BackingField: {fileID: 7048277798042048373}
-  OnEntitySelect:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEntityDeselect:
-    m_PersistentCalls:
-      m_Calls: []
-  OnManpowerDepletion:
-    m_PersistentCalls:
-      m_Calls: []
-  _logActions: 0
 --- !u!195 &6467184259133530056
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -196,7 +212,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 20
   m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -228,6 +244,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -249,6 +267,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -355,8 +374,8 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 4593821650549105640}
   - {fileID: 0}
+  - {fileID: -5870528603401698739}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -375,15 +394,15 @@ MonoBehaviour:
   _enableStateForwarding: 1
   _networkTransform: {fileID: 0}
   _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
+  _ownerSmoothedProperties: 4294967295
   _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
+  _spectatorSmoothedProperties: 4294967295
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 5061642459292643593
+  <AssetPathHash>k__BackingField: 18116135148076751431
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
     Position: {x: 1.0160162, y: 4.2726865, z: 0}
@@ -402,9 +421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3300923522360156658}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3300923522360156658}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:

@@ -43,7 +43,7 @@ public class UI_UnitTrainingBarManager : MonoBehaviour
             _slotList.Add(slotObject);
         }
 
-        _uiContainer.SetActive(true);
+        //_uiContainer.SetActive(true);
     }
 
 
@@ -54,6 +54,6 @@ public class UI_UnitTrainingBarManager : MonoBehaviour
             Destroy(go);
         }
 
-        _uiContainer.SetActive(false);
+        //_uiContainer.SetActive(false);
     }
 }
