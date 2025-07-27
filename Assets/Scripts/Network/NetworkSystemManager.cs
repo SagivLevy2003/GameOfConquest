@@ -8,8 +8,6 @@ public class NetworkSystemManager : Singleton<NetworkSystemManager>
     public PlayerObjectManager PlayerObjectManager = new();
     public NetworkObjectManager NetworkObjectManager = new();
 
-    public UnityEvent<int, bool> OnPlayerConnectionStateChange = new(); //Gets called on both the clients and server when a client connects, arguement is whether it was a connect or disconnect.
-
     private void Start()
     {
         DontDestroyOnLoad(this);

@@ -1,4 +1,5 @@
-﻿using FishNet.Object;
+﻿using FishNet;
+using FishNet.Object;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -46,10 +47,14 @@ public class SelectionSystem : Singleton<SelectionSystem>
     private void SelectObject(NetworkObject obj, ISelectable selectable) 
     {
         DeselectCurrentObject(); //Deselects previous object
-        SelectedObject = obj; //Assigns the object
-        selectable.OnSelect(); //Calls the selectable object's selection method
+        SelectedObject = obj;
+        selectable.OnSelect();
 
-        OnObjectSelected?.Invoke(obj); //Invokes the global selection event
+        //
+        //add object despawn event to de-select the object
+        //
+
+        OnObjectSelected?.Invoke(obj); 
     }
 
     private void DeselectCurrentObject()

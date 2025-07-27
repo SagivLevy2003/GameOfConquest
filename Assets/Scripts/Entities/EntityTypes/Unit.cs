@@ -1,3 +1,4 @@
+using FishNet;
 using UnityEngine;
 
 public class Unit : Entity
@@ -7,7 +8,7 @@ public class Unit : Entity
     protected override void OnManpowerDepleted(Entity source = null)
     {
         base.OnManpowerDepleted(source);
-        Destroy(transform.root.gameObject);
+        InstanceFinder.ServerManager.Despawn(transform.root.gameObject);
     }
 
     private void Awake()

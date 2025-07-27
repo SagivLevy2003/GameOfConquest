@@ -15,10 +15,11 @@ public class Entity : NetworkBehaviour, ITargetable, ISelectable
 
     [Header("Debug Information")]
     [field:SerializeField, ReadOnly] public PlayerObject OwnerPlayerObject { get; private set; }
-    [field:SerializeField, ReadOnly] public int _currentManpower;
-    public CombatHandler CombatHandler { get; private set; }
-
+    [field: SerializeField, ReadOnly] public int CurrentManpower { get; private set; }
     [SerializeField] private bool _logActions;
+
+    [Header("References")]
+    public CombatHandler CombatHandler { get; private set; }
 
 
     [Header("Event Callbacks")]
@@ -32,7 +33,7 @@ public class Entity : NetworkBehaviour, ITargetable, ISelectable
 
     private void Start()
     {
-        _manpowerSync.OnChange += (_, newVal, __) => _currentManpower = newVal;
+        _manpowerSync.OnChange += (_, newVal, __) => CurrentManpower = newVal;
     }
 
     public void OnDeselect()
@@ -83,7 +84,7 @@ public class Entity : NetworkBehaviour, ITargetable, ISelectable
         return _manpowerSync.Value;
     }
 
-    protected virtual void OnManpowerDepleted(Entity source = null) //Handles manpower delpetion (death) scenario. specific behaviour is implemented by inherited classes.
+    protected virtual void OnManpowerDepleted(Entity source = null) //Handles manpower depletion (death) scenario. specific behaviour is implemented by inherited classes.
     {
         _manpowerSync.Value = 0;
         OnManpowerDepletion?.Invoke(source);

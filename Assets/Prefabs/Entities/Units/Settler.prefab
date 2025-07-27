@@ -57,15 +57,103 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      propertyPath: <PrefabId>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
       propertyPath: <AssetPathHash>k__BackingField
       value: 3217501889066806149
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2471577469786807124}
+    - target: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      propertyPath: SerializedTransformProperties.Position.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      propertyPath: SerializedTransformProperties.Position.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}
       propertyPath: m_Name
       value: Settler
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7048277798042048373, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      propertyPath: <OwnerEntity>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5217999918721792257, guid: 924240de5c7a91d439ca97e925099611, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 2471577469786807124}
+    - targetCorrespondingSourceObject: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: -6343542499124911159}
   m_SourcePrefab: {fileID: 100100000, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+--- !u!114 &2362307929250027921 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3300923522360156658, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+  m_PrefabInstance: {fileID: 938902665504192611}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5233118188933481354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &5233118188933481354 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+  m_PrefabInstance: {fileID: 938902665504192611}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2471577469786807124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5233118188933481354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e5608e184e91444c80af95298782f36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Settler
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 2362307929250027921}
+  _networkObjectCache: {fileID: 2362307929250027921}
+  <EntitySelectionOptionPrefabs>k__BackingField: []
+  <OwnerPlayerObject>k__BackingField: {fileID: 0}
+  <CurrentManpower>k__BackingField: 0
+  _logActions: 0
+  OnEntitySelect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEntityDeselect:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManpowerDepletion:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &-6343542499124911159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5233118188933481354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43a328d7dfa9c80418b257bbefa84ea7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityAbilityHandler
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2362307929250027921}
+  _networkObjectCache: {fileID: 0}
+  Abilities:
+  - {fileID: 11400000, guid: bfdd75907516c4242a5d00d31905255c, type: 2}

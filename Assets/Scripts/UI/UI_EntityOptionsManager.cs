@@ -28,6 +28,10 @@ public class UI_EntityOptionsManager : MonoBehaviour
         ClearMenu();
 
         if (obj == null) return;
+
+        if (!obj.IsOwner) return;
+
+
         foreach (var section in _entityOptionSection)
         {
             section.GenerateSection(obj, this);

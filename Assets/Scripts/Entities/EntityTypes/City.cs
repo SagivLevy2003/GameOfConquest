@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using FishNet;
+using System.Collections;
 using Unity;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class City : Structure
     private void Start()
     {
         _trainingManager = GetComponent<UnitTrainingManager>();
+
+        if (!InstanceFinder.IsServerStarted) return;
         StartCoroutine(GenerateManpower());
     }
 

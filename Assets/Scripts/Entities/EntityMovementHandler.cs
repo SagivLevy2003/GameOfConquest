@@ -45,7 +45,6 @@ public class EntityMovementHandler : MonoBehaviour
         _navAgent.isStopped = true;
         //
 
-        Debug.Log($"movespeed: {_moveSpeed.Value}");
         _navAgent.speed = _moveSpeed.Value;
     }
 

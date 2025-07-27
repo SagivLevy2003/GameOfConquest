@@ -37,7 +37,7 @@ public class PlayerObject : NetworkBehaviour
     {
         Name.Value = username;
         Id.Value = OwnerId;
-
+        name = username; //Sets the object name to the username
         NetworkSystemManager.Instance.PlayerObjectManager?.AddObject(this);
     }
 }

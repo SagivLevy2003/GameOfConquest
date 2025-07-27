@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using FishNet.Object;
+using Mono.Cecil.Cil;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class UnitTrainingManager : MonoBehaviour //Currently out of scope, but I can add a unit training factory to allow the creation of units without an entity :)
+public class UnitTrainingManager : NetworkBehaviour //Currently out of scope, but I can add a unit training factory to allow the creation of units without an entity :)
 {
     [field: SerializeField] public List<UnitTrainingData> TrainableUnits { get; private set; }
     public Entity ParentEntity { get; private set; }
@@ -22,7 +24,13 @@ public class UnitTrainingManager : MonoBehaviour //Currently out of scope, but I
 
     public Entity TrainUnit(UnitTrainingData data)
     {
-        Entity unit = EntitySpawnFactory.SpawnEntityAtPosition(data.Prefab, ParentEntity.OwnerPlayerObject.Id.Value, transform.position);
+        if (!data)
+        {
+            Debug.LogWarning("Attempted to train a unit with empty data!");
+            return null;
+        }
+
+        Entity unit = EntitySpawnFactory.SpawnEntityAtPosition(data.Prefab, OwnerId, transform.position);
 
         OnUnitTrained?.Invoke(unit); //Fires the appropriate event
 

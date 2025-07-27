@@ -431,8 +431,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TestUnitSpawner
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8525492529873978290}
-  _networkObjectCache: {fileID: 0}
-  UnitPrefab: {fileID: 5014867843360979945, guid: 924240de5c7a91d439ca97e925099611, type: 3}
+  _networkObjectCache: {fileID: 8525492529873978290}
+  UnitPrefab: {fileID: 5233118188933481354, guid: c1587e531b5fff64ab37156d43ca10b0, type: 3}
   CityPrefab: {fileID: 743780730333280238, guid: c665a5339f095c44b961a30c43a711b2, type: 3}
   _unitBtn: {fileID: 8175296283558596393}
   _cityBtn: {fileID: 738218166264887791}
@@ -454,7 +454,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 3463806581278478515}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -479,15 +480,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 4
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13967180560559457975
   <SceneId>k__BackingField: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: -60, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!1 &8615193173512906974
 GameObject:
   m_ObjectHideFlags: 0

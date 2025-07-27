@@ -12,9 +12,9 @@ public class PlayerObjectManager
 
     [SerializeField] Transform PlayerObjectContainer;
 
-    public void AddObject(PlayerObject obj)
+    public void AddObject(PlayerObject playerObj)
     {
-        int id = obj.Id.Value;
+        int id = playerObj.Id.Value;
 
         if (PlayerObjects.ContainsKey(id))
         {
@@ -22,8 +22,7 @@ public class PlayerObjectManager
             return;
         }
         
-        obj.transform.parent = PlayerObjectContainer;
-        PlayerObjects.Add(id, obj);
+        PlayerObjects.Add(id, playerObj);
         OnPlayerObjectSpawned?.Invoke(id);
     }
 

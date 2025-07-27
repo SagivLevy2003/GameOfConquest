@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719b55a0deb7bdb41ba7ee68ade96db1, type: 3}
   m_Name: TrainingSection
   m_EditorClassIdentifier: Assembly-CSharp::UI_TrainingOptionSection
-  _prefab: {fileID: 4048732063382582631, guid: d6991952706ad434381d19aa8235b956, type: 3}
+  _trainingOptionPrefab: {fileID: 4048732063382582631, guid: d6991952706ad434381d19aa8235b956, type: 3}
